@@ -54,29 +54,29 @@ jobs:
         esac
 
         target=Experimental
-        major=${{ env.sed -ne 's/^SET(CPACK_PACKAGE_VERSION_MAJOR "\([0-9]*\ }}")\s*$/\1/ip' CMakeLists.txt)
-        minor=${{ env.sed -ne 's/^SET(CPACK_PACKAGE_VERSION_MINOR "\([0-9]*\ }}")\s*$/\1/ip' CMakeLists.txt)
-        patch=${{ env.sed -ne 's/^SET(CPACK_PACKAGE_VERSION_PATCH "\([0-9]*\ }}")\s*$/\1/ip' CMakeLists.txt)
-        binary=${{ env.curl --location-trusted http://ftp.osuosl.org/pub/osgeo/download/osgeo4w/${{ env.OSGEO4W_ARCH }}/release/qgis/${{ env.OSGEO4W_PKG }}/LATEST.sha | sed -e "s/:.*$//" }}
+        major=$(sed -ne 's/^SET(CPACK_PACKAGE_VERSION_MAJOR "\([0-9]*\)")\s*$/\1/ip' CMakeLists.txt)
+        minor=$(sed -ne 's/^SET(CPACK_PACKAGE_VERSION_MINOR "\([0-9]*\)")\s*$/\1/ip' CMakeLists.txt)
+        patch=$(sed -ne 's/^SET(CPACK_PACKAGE_VERSION_PATCH "\([0-9]*\)")\s*$/\1/ip' CMakeLists.txt)
+        binary=$(curl --location-trusted http://ftp.osuosl.org/pub/osgeo/download/osgeo4w/$OSGEO4W_ARCH/release/qgis/$OSGEO4W_PKG/LATEST.sha | sed -e "s/:.*$//")
         (( binary++ )) || true
 
         version=$major.$minor.$patch
         sha="${BUILD_SOURCEVERSION:0:10}"
 
         if [ "$BUILD_REASON" = "PullRequest" ]; then
-          buildname="PR $pr / $branch ($BUILD_BUILDID) ($sha) (${{ env.OSGEO4W_PKG }} $target ${{ env.OSGEO4W_ARCH }})"   # no colons allowed here
+          buildname="PR $pr / $branch ($BUILD_BUILDID) ($sha) ($OSGEO4W_PKG $target $OSGEO4W_ARCH)"   # no colons allowed here
         else
-          buildname="${{ env.OSGEO4W_PKG }}-$version-$sha-$target-VC14-${{ env.OSGEO4W_ARCH }}"
+          buildname="$OSGEO4W_PKG-$version-$sha-$target-VC14-$OSGEO4W_ARCH"
         fi
 
         url=$buildname
         url=${url//(/%28}
         url=${url//)/%29}
         url=${url// /+}
-        url="https://cdash.orfeo-toolbox.org/index.php?project=QGIS&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercount=4&showfilters=0&filtercombine=and&field1=buildname&compare1=61&value1=$url&field2=site&compare2=65&value2=azure-pipelines&field3=buildstarttime&compare3=83&value3=${{ env.date +%Y-%m-%d --date=yesterday }}&field4=buildstarttime&compare4=84&value4=${{ env.date +%Y-%m-%d --date=tomorrow }}"
+        url="https://cdash.orfeo-toolbox.org/index.php?project=QGIS&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercount=4&showfilters=0&filtercombine=and&field1=buildname&compare1=61&value1=$url&field2=site&compare2=65&value2=azure-pipelines&field3=buildstarttime&compare3=83&value3=$(date +%Y-%m-%d --date=yesterday)&field4=buildstarttime&compare4=84&value4=$(date +%Y-%m-%d --date=tomorrow)"
 
         echo "##vso[task.setvariable variable=TARGET]$target"
-        echo "##vso[task.setvariable variable=OSGEO4W_PKG]${{ env.OSGEO4W_PKG }}"
+        echo "##vso[task.setvariable variable=OSGEO4W_PKG]$OSGEO4W_PKG"
         echo "##vso[task.setvariable variable=OSGEO4W_DEPS]$OSGEO4W_DEPS"
         echo "##vso[task.setvariable variable=MAJOR]$major"
         echo "##vso[task.setvariable variable=MINOR]$minor"
