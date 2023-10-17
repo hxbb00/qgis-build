@@ -115,7 +115,7 @@ jobs:
 
     - name: Display tool versions
       run: |
-        set PATH=$env:OSGEO4W_ROOT/bin;%ProgramFiles%/CMake/bin;%PATH%
+        set PATH=%OSGEO4W_ROOT%\bin;%ProgramFiles%\CMake\bin;%PATH%
         cmake --version
         ctest --version
         ninja --version
@@ -124,10 +124,10 @@ jobs:
     - name: Building QGIS
       run: |
         echo on
-        set PATH=c:/cygwin/bin;$env:OSGEO4W_ROOT/bin;%ProgramFiles%/CMake/bin;%PATH%
+        set PATH=c:\cygwin\bin;%OSGEO4W_ROOT%\bin;%ProgramFiles%\CMake\bin;%PATH%
         cd ms-windows/osgeo4w
         type nul> skippackage
         set OSGEO4W_CXXFLAGS=/MD /MP /Od /D NDEBUG
-        package-nightly.cmd $env:VERSION $env:BINARY $env:OSGEO4W_PKG $env:OSGEO4W_ARCH $env:BUILD_SHA
+        package-nightly.cmd %VERSION% %BINARY% %OSGEO4W_PKG% %OSGEO4W_ARCH% %BUILD_SHA%
       shell: cmd
                     
