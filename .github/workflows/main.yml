@@ -66,8 +66,7 @@ jobs:
         major=$(sed -ne 's/^SET(CPACK_PACKAGE_VERSION_MAJOR "\([0-9]*\)")\s*$/\1/ip' CMakeLists.txt)
         minor=$(sed -ne 's/^SET(CPACK_PACKAGE_VERSION_MINOR "\([0-9]*\)")\s*$/\1/ip' CMakeLists.txt)
         patch=$(sed -ne 's/^SET(CPACK_PACKAGE_VERSION_PATCH "\([0-9]*\)")\s*$/\1/ip' CMakeLists.txt)
-        binary=$(curl --location-trusted http://ftp.osuosl.org/pub/osgeo/download/osgeo4w/$OSGEO4W_ARCH/release/qgis/$OSGEO4W_PKG/LATEST.sha | sed -e "s/:.*$//")
-        (( binary++ )) || true
+        binary=1
 
         version=$major.$minor.$patch
         sha="${BUILD_SOURCEVERSION:0:10}"
@@ -78,22 +77,15 @@ jobs:
           buildname="$OSGEO4W_PKG-$version-$sha-$target-VC14-$OSGEO4W_ARCH"
         fi
 
-        url=$buildname
-        url=${url//(/%28}
-        url=${url//)/%29}
-        url=${url// /+}
-        url="https://cdash.orfeo-toolbox.org/index.php?project=QGIS&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercount=4&showfilters=0&filtercombine=and&field1=buildname&compare1=61&value1=$url&field2=site&compare2=65&value2=azure-pipelines&field3=buildstarttime&compare3=83&value3=$(date +%Y-%m-%d --date=yesterday)&field4=buildstarttime&compare4=84&value4=$(date +%Y-%m-%d --date=tomorrow)"
-
-        echo "##vso[task.setvariable variable=TARGET]$target"
-        echo "##vso[task.setvariable variable=OSGEO4W_PKG]$OSGEO4W_PKG"
-        echo "##vso[task.setvariable variable=OSGEO4W_DEPS]$OSGEO4W_DEPS"
-        echo "##vso[task.setvariable variable=MAJOR]$major"
-        echo "##vso[task.setvariable variable=MINOR]$minor"
-        echo "##vso[task.setvariable variable=PATCH]$patch"
-        echo "##vso[task.setvariable variable=BINARY]$binary"
-        echo "##vso[task.setvariable variable=VERSION]$version"
-        echo "##vso[task.setvariable variable=BUILDNAME]$buildname"
-        echo "##vso[task.setvariable variable=DASHURL]${url//&/^&}"
+        echo "TARGET=$target" >> ${GITHUB_ENV}
+        echo "OSGEO4W_PKG=$OSGEO4W_PKG" >> ${GITHUB_ENV}
+        echo "OSGEO4W_DEPS=$OSGEO4W_DEPS" >> ${GITHUB_ENV}
+        echo "MAJOR=$major" >> ${GITHUB_ENV}
+        echo "MINOR=$minor" >> ${GITHUB_ENV}
+        echo "PATCH=$patch" >> ${GITHUB_ENV}
+        echo "BINARY=$binary" >> ${GITHUB_ENV}
+        echo "VERSION=$version" >> ${GITHUB_ENV}
+        echo "BUILDNAME=$buildname" >> ${GITHUB_ENV}
       shell: bash
 
     - name: Download cygwin Installer
@@ -135,6 +127,5 @@ jobs:
         cd ms-windows/osgeo4w
         touch skippackage
         set OSGEO4W_CXXFLAGS=/MD /MP /Od /D NDEBUG
-        @echo ##[section]%OSGEO4W_ARCH% results available at %DASHURL%
-        package-nightly.cmd %VERSION% %BINARY% %OSGEO4W_PKG% %OSGEO4W_ARCH% %BUILD_SOURCEVERSION:~0,10% azure-pipelines
+        package-nightly.cmd %VERSION% %BINARY% %OSGEO4W_PKG% %OSGEO4W_ARCH% %BUILD_SOURCEVERSION:~0,10%
                     
