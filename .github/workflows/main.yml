@@ -74,22 +74,22 @@ jobs:
         echo "VERSION=$version" >> ${GITHUB_ENV}
         echo "BUILDNAME=$buildname" >> ${GITHUB_ENV}
 
-        echo "TARGET: ${TARGET}"
-        echo "OSGEO4W_PKG: ${OSGEO4W_PKG}"
-        echo "OSGEO4W_DEPS: ${OSGEO4W_DEPS}"
-        echo "MAJOR: ${MAJOR}"
-        echo "MINOR: ${MINOR}"
-        echo "PATCH: ${PATCH}"
-        echo "BINARY: ${BINARY}"
-        echo "VERSION: ${VERSION}"
-        echo "BUILDNAME: ${BUILDNAME}"
+        echo "TARGET: $env:TARGET"
+        echo "OSGEO4W_PKG: $env:OSGEO4W_PKG"
+        echo "OSGEO4W_DEPS: $env:OSGEO4W_DEPS"
+        echo "MAJOR: $env:MAJOR"
+        echo "MINOR: $env:MINOR"
+        echo "PATCH: $env:PATCH"
+        echo "BINARY: $env:BINARY"
+        echo "VERSION: $env:VERSION"
+        echo "BUILDNAME: $env:BUILDNAME"
       shell: bash
 
     - name: Download cygwin Installer
       run: curl --output c:/setup-x86_64.exe https://cygwin.com/setup-x86_64.exe
 
     - name: Download OSGeo4W Installer
-      run: curl --output c:/osgeo4w-setup.exe http://ftp.osuosl.org/pub/osgeo/download/osgeo4w/osgeo4w-setup.exe
+      run: curl --output c:/osgeo4w-setup.exe http://ftp.osuosl.org/pub/osgeo/download/osgeo4w/osgeo4w-setup-v2.exe
 
     - name: Download Ninja
       run: curl --location-trusted --output c:/ninja.zip https://github.com/ninja-build/ninja/releases/download/v1.9.0/ninja-win.zip
@@ -99,13 +99,14 @@ jobs:
       shell: powershell
 
     - name: Installing OSGeo4W
-      run: ms-windows/osgeo4w/runasadmin.ps1 c:/osgeo4w-setup.exe --autoaccept --advanced --arch $env:OSGEO4W_ARCH --quiet-mode --upgrade-also --root $env:OSGEO4W_ROOT --only-site -s http://ftp.osuosl.org/pub/osgeo/download/osgeo4w -l c:/temp/osgeo4w -P $env:OSGEO4W_DEPS -P python3-clcache
+      run: ms-windows/osgeo4w/runasadmin.ps1 c:/osgeo4w-setup.exe --autoaccept --advanced --arch $env:OSGEO4W_ARCH --quiet-mode --upgrade-also --root $env:OSGEO4W_ROOT --only-site -s http://ftp.osuosl.org/pub/osgeo/download/osgeo4w/v2 -l c:/temp/osgeo4w -P $env:OSGEO4W_DEPS -P python3-clcache
       shell: powershell
 
     - name: Clear package caches
       run: |
         rmdir /s /q c:/temp/cygwin
         rmdir /s /q c:/temp/osgeo4w
+      shell: bash
 
     - name: Extracting Ninja
       run: c:/cygwin/bin/unzip -o c:/ninja.zip -d %OSGEO4W_ROOT%/bin
