@@ -115,19 +115,19 @@ jobs:
 
     - name: Display tool versions
       run: |
-        echo "$env:OSGEO4W_ROOT/bin" >> $GITHUB_PATH
-        echo "%ProgramFiles%/CMake/bin" >> $GITHUB_PATH
+        set PATH=$env:OSGEO4W_ROOT/bin;%ProgramFiles%/CMake/bin;%PATH%
         cmake --version
         ctest --version
         ninja --version
-      shell: bash
+      shell: cmd
       
     - name: Building QGIS
       run: |
         echo on
-        set PATH=c:/cygwin/bin;$env:OSGEO4W_ROOT/bin;%PATH%
+        set PATH=c:/cygwin/bin;$env:OSGEO4W_ROOT/bin;%ProgramFiles%/CMake/bin;%PATH%
         cd ms-windows/osgeo4w
-        touch skippackage
+        type nul> skippackage
         set OSGEO4W_CXXFLAGS=/MD /MP /Od /D NDEBUG
         package-nightly.cmd $env:VERSION $env:BINARY $env:OSGEO4W_PKG $env:OSGEO4W_ARCH $env:BUILD_SHA
+      shell: cmd
                     
