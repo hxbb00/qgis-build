@@ -109,11 +109,11 @@ jobs:
       shell: cmd
 
     - name: Extracting Ninja
-      run: c:/cygwin/bin/unzip -o c:/ninja.zip -d %OSGEO4W_ROOT%/bin
+      run: c:/cygwin/bin/unzip -o c:/ninja.zip -d $env:OSGEO4W_ROOT/bin
 
     - name: Display tool versions
       run: |
-        PATH %OSGEO4W_ROOT%/bin;%ProgramFiles%/CMake/bin;%PATH%
+        PATH $env:OSGEO4W_ROOT/bin;%ProgramFiles%/CMake/bin;%PATH%
         cmake --version
         ctest --version
         ninja --version
@@ -121,9 +121,9 @@ jobs:
     - name: Building QGIS
       run: |
         echo on
-        PATH c:/cygwin/bin;%OSGEO4W_ROOT%/bin;%PATH%
+        PATH c:/cygwin/bin;$env:OSGEO4W_ROOT/bin;%PATH%
         cd ms-windows/osgeo4w
         touch skippackage
         set OSGEO4W_CXXFLAGS=/MD /MP /Od /D NDEBUG
-        package-nightly.cmd %VERSION% %BINARY% %OSGEO4W_PKG% %OSGEO4W_ARCH% %BUILD_SOURCEVERSION:~0,10%
+        package-nightly.cmd $env:VERSION $env:BINARY $env:OSGEO4W_PKG $env:OSGEO4W_ARCH $env:BUILD_SOURCEVERSION:~0,10
                     
