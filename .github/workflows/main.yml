@@ -1,0 +1,131 @@
+name: build-on-windows
+
+on:
+  workflow_dispatch:
+
+env:
+  LR: release-3_12
+  LTR: release-3_10
+  Agent.Source.Git.ShallowFetchDepth: 120
+  
+jobs:
+  OSGeo4W:
+    strategy:
+      matrix:
+        OSGEO4W_ROOT:
+        - C:\OSGeo4W
+        - C:\OSGeo4W64
+      max-parallel: 4
+    runs-on: vs2017-win2016
+    timeout-minutes: 360
+    steps:
+    - name: Checkout QGIS repo
+      uses: actions/checkout@v4
+      with:
+        repository: qgis/QGIS
+
+    - name: Setup build variables
+      run: |
+        if [ "$BUILD_REASON" = "PullRequest" ]; then
+          branch=$SYSTEM_PULLREQUEST_TARGETBRANCH
+          pr=$SYSTEM_PULLREQUEST_PULLREQUESTNUMBER
+        else
+          branch=$BUILD_SOURCEBRANCHNAME
+        fi
+
+        echo "BRANCH: ${branch}"
+        echo "PR: ${pr}"
+        echo "LR: ${LR}"
+        echo "LTR: ${LTR}"
+
+        case "${branch}" in
+        "${LTR}")
+          OSGEO4W_PKG=qgis-ltr-dev
+          OSGEO4W_DEPS=qgis-ltr-dev-deps
+          ;;
+        "${LR}")
+          OSGEO4W_PKG=qgis-rel-dev
+          OSGEO4W_DEPS=qgis-rel-dev-deps
+          ;;
+        *)
+          OSGEO4W_PKG=qgis-dev
+          OSGEO4W_DEPS=qgis-dev-deps
+          ;;
+        esac
+
+        target=Experimental
+        major=${{ env.sed -ne 's/^SET(CPACK_PACKAGE_VERSION_MAJOR "\([0-9]*\ }}")\s*$/\1/ip' CMakeLists.txt)
+        minor=${{ env.sed -ne 's/^SET(CPACK_PACKAGE_VERSION_MINOR "\([0-9]*\ }}")\s*$/\1/ip' CMakeLists.txt)
+        patch=${{ env.sed -ne 's/^SET(CPACK_PACKAGE_VERSION_PATCH "\([0-9]*\ }}")\s*$/\1/ip' CMakeLists.txt)
+        binary=${{ env.curl --location-trusted http://ftp.osuosl.org/pub/osgeo/download/osgeo4w/${{ env.OSGEO4W_ARCH }}/release/qgis/${{ env.OSGEO4W_PKG }}/LATEST.sha | sed -e "s/:.*$//" }}
+        (( binary++ )) || true
+
+        version=$major.$minor.$patch
+        sha="${BUILD_SOURCEVERSION:0:10}"
+
+        if [ "$BUILD_REASON" = "PullRequest" ]; then
+          buildname="PR $pr / $branch ($BUILD_BUILDID) ($sha) (${{ env.OSGEO4W_PKG }} $target ${{ env.OSGEO4W_ARCH }})"   # no colons allowed here
+        else
+          buildname="${{ env.OSGEO4W_PKG }}-$version-$sha-$target-VC14-${{ env.OSGEO4W_ARCH }}"
+        fi
+
+        url=$buildname
+        url=${url//(/%28}
+        url=${url//)/%29}
+        url=${url// /+}
+        url="https://cdash.orfeo-toolbox.org/index.php?project=QGIS&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercombine=and&filtercount=4&showfilters=0&filtercombine=and&field1=buildname&compare1=61&value1=$url&field2=site&compare2=65&value2=azure-pipelines&field3=buildstarttime&compare3=83&value3=${{ env.date +%Y-%m-%d --date=yesterday }}&field4=buildstarttime&compare4=84&value4=${{ env.date +%Y-%m-%d --date=tomorrow }}"
+
+        echo "##vso[task.setvariable variable=TARGET]$target"
+        echo "##vso[task.setvariable variable=OSGEO4W_PKG]${{ env.OSGEO4W_PKG }}"
+        echo "##vso[task.setvariable variable=OSGEO4W_DEPS]$OSGEO4W_DEPS"
+        echo "##vso[task.setvariable variable=MAJOR]$major"
+        echo "##vso[task.setvariable variable=MINOR]$minor"
+        echo "##vso[task.setvariable variable=PATCH]$patch"
+        echo "##vso[task.setvariable variable=BINARY]$binary"
+        echo "##vso[task.setvariable variable=VERSION]$version"
+        echo "##vso[task.setvariable variable=BUILDNAME]$buildname"
+        echo "##vso[task.setvariable variable=DASHURL]${url//&/^&}"
+      shell: bash
+
+    - name: Download cygwin Installer
+      run: curl --output c:\setup-x86.exe https://cygwin.com/setup-x86.exe
+
+    - name: Download OSGeo4W Installer
+      run: curl --output c:\osgeo4w-setup.exe http://ftp.osuosl.org/pub/osgeo/download/osgeo4w/osgeo4w-setup-%OSGEO4W_ARCH%.exe
+
+    - name: Download Ninja
+      run: curl --location-trusted --output c:\ninja.zip https://github.com/ninja-build/ninja/releases/download/v1.9.0/ninja-win.zip
+
+    - name: Installing cygwin
+      run: ms-windows/osgeo4w/runasadmin.ps1 c:\setup-x86.exe -qnNdO -R C:/cygwin -s http://cygwin.mirror.constant.com -l C:/temp/cygwin -P "bison,flex,git,poppler,doxygen,unzip"
+      shell: powershell
+
+    - name: Installing OSGeo4W
+      run: ms-windows/osgeo4w/runasadmin.ps1 c:\osgeo4w-setup.exe --autoaccept --advanced --arch $env:OSGEO4W_ARCH --quiet-mode --upgrade-also --root $env:OSGEO4W_ROOT --only-site -s http://ftp.osuosl.org/pub/osgeo/download/osgeo4w -l c:\temp\osgeo4w -P $env:OSGEO4W_DEPS -P python3-clcache
+      shell: powershell
+
+    - name: Clear package caches
+      run: |
+        rmdir /s /q c:\temp\cygwin
+        rmdir /s /q c:\temp\osgeo4w
+
+    - name: Extracting Ninja
+      run: c:\cygwin\bin\unzip -o c:\ninja.zip -d %OSGEO4W_ROOT%\bin
+
+    - name: Display tool versions
+      run: |
+        PATH %OSGEO4W_ROOT%\bin;%ProgramFiles%\CMake\bin;%PATH%
+        cmake --version
+        ctest --version
+        ninja --version
+
+    - name: Building QGIS
+      run: |
+        echo on
+        PATH c:\cygwin\bin;%OSGEO4W_ROOT%\bin;%PATH%
+        cd ms-windows\osgeo4w
+        touch skippackage
+        set OSGEO4W_CXXFLAGS=/MD /MP /Od /D NDEBUG
+        @echo ##[section]%OSGEO4W_ARCH% results available at %DASHURL%
+        package-nightly.cmd %VERSION% %BINARY% %OSGEO4W_PKG% %OSGEO4W_ARCH% %BUILD_SOURCEVERSION:~0,10% azure-pipelines
+                    
