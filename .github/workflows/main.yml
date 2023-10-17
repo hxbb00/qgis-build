@@ -16,7 +16,7 @@ jobs:
         - C:\OSGeo4W
         - C:\OSGeo4W64
       max-parallel: 4
-    runs-on: vs2017-win2016
+    runs-on: windows-2019
     timeout-minutes: 360
     steps:
     - name: Checkout QGIS repo
