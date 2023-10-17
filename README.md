@@ -1,2 +1,2 @@
 # qgis-build
-build4qgis
+http://gwmodel.whu.edu.cn/mirrors/osgeo4w/
