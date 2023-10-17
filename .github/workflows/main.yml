@@ -11,7 +11,7 @@ jobs:
   OSGeo4W:
     strategy:
       max-parallel: 4
-    runs-on: windows-2019
+    runs-on: windows-2022
     timeout-minutes: 360
     
     env:
@@ -74,15 +74,15 @@ jobs:
         echo "VERSION=$version" >> ${GITHUB_ENV}
         echo "BUILDNAME=$buildname" >> ${GITHUB_ENV}
 
-        echo "TARGET: $env:TARGET"
-        echo "OSGEO4W_PKG: $env:OSGEO4W_PKG"
-        echo "OSGEO4W_DEPS: $env:OSGEO4W_DEPS"
-        echo "MAJOR: $env:MAJOR"
-        echo "MINOR: $env:MINOR"
-        echo "PATCH: $env:PATCH"
-        echo "BINARY: $env:BINARY"
-        echo "VERSION: $env:VERSION"
-        echo "BUILDNAME: $env:BUILDNAME"
+        echo "TARGET: $target"
+        echo "OSGEO4W_PKG: $OSGEO4W_PKG"
+        echo "OSGEO4W_DEPS: $OSGEO4W_DEPS"
+        echo "MAJOR: $major"
+        echo "MINOR: $minor"
+        echo "PATCH: $patch"
+        echo "BINARY: $binary"
+        echo "VERSION: $version"
+        echo "BUILDNAME: $buildname"
       shell: bash
 
     - name: Download cygwin Installer
@@ -104,9 +104,9 @@ jobs:
 
     - name: Clear package caches
       run: |
-        rmdir /s /q c:/temp/cygwin
-        rmdir /s /q c:/temp/osgeo4w
-      shell: bash
+        rmdir /s /q c:\temp\cygwin
+        rmdir /s /q c:\temp\osgeo4w
+      shell: cmd
 
     - name: Extracting Ninja
       run: c:/cygwin/bin/unzip -o c:/ninja.zip -d %OSGEO4W_ROOT%/bin
