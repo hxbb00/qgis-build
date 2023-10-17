@@ -73,7 +73,8 @@ jobs:
         echo "BINARY=$binary" >> ${GITHUB_ENV}
         echo "VERSION=$version" >> ${GITHUB_ENV}
         echo "BUILDNAME=$buildname" >> ${GITHUB_ENV}
-
+        echo "BUILD_SHA=$sha" >> ${GITHUB_ENV}
+        
         echo "TARGET: $target"
         echo "OSGEO4W_PKG: $OSGEO4W_PKG"
         echo "OSGEO4W_DEPS: $OSGEO4W_DEPS"
@@ -83,6 +84,7 @@ jobs:
         echo "BINARY: $binary"
         echo "VERSION: $version"
         echo "BUILDNAME: $buildname"
+        echo "BUILD_SHA: $sha"
       shell: bash
 
     - name: Download cygwin Installer
@@ -113,17 +115,19 @@ jobs:
 
     - name: Display tool versions
       run: |
-        PATH $env:OSGEO4W_ROOT/bin;%ProgramFiles%/CMake/bin;%PATH%
+        echo "$env:OSGEO4W_ROOT/bin" >> $GITHUB_PATH
+        echo "%ProgramFiles%/CMake/bin" >> $GITHUB_PATH
         cmake --version
         ctest --version
         ninja --version
-
+      shell: bash
+      
     - name: Building QGIS
       run: |
         echo on
-        PATH c:/cygwin/bin;$env:OSGEO4W_ROOT/bin;%PATH%
+        set PATH=c:/cygwin/bin;$env:OSGEO4W_ROOT/bin;%PATH%
         cd ms-windows/osgeo4w
         touch skippackage
         set OSGEO4W_CXXFLAGS=/MD /MP /Od /D NDEBUG
-        package-nightly.cmd $env:VERSION $env:BINARY $env:OSGEO4W_PKG $env:OSGEO4W_ARCH $env:BUILD_SOURCEVERSION:~0,10
+        package-nightly.cmd $env:VERSION $env:BINARY $env:OSGEO4W_PKG $env:OSGEO4W_ARCH $env:BUILD_SHA
                     
