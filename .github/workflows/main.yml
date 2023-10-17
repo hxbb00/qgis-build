@@ -6,26 +6,21 @@ on:
 env:
   LR: release-3_12
   LTR: release-3_10
-  Agent.Source.Git.ShallowFetchDepth: 120
   
 jobs:
   OSGeo4W:
     strategy:
-      matrix:
-        config:
-          - { platform: x86, cxx: "C:/OSGeo4W/bin/clcache.bat", cc: "C:/OSGeo4W/bin/clcache.bat", osgeo4w_root: "C:/OSGeo4W", osgeo4w_arch: x86, cl_cache_dir: "c:/clcache-x86" }
-          - { platform: x64, cxx: "C:/OSGeo4W64/bin/clcache.bat", cc: "C:/OSGeo4W64/bin/clcache.bat", osgeo4w_root: "C:/OSGeo4W64", osgeo4w_arch: x86_64, cl_cache_dir: "c:/clcache-x86_64" }
       max-parallel: 4
     runs-on: windows-2019
     timeout-minutes: 360
     
     env:
-      CC: ${{ matrix.config.cc }}
-      CXX: ${{ matrix.config.cxx }}
-      OSGEO4W_ROOT: ${{ matrix.config.osgeo4w_root }}
-      OSGEO4W_ARCH: ${{ matrix.config.osgeo4w_arch }}
-      CLCACHE_DIR: ${{ matrix.config.cl_cache_dir }}
-      PLATFORM: ${{ matrix.config.platform }}
+      CC: C:/OSGeo4W64/bin/clcache.bat
+      CXX: C:/OSGeo4W64/bin/clcache.bat
+      OSGEO4W_ROOT: C:/OSGeo4W64
+      OSGEO4W_ARCH: x86_64
+      CLCACHE_DIR: c:/clcache-x86_64
+      PLATFORM: x64
       
     steps:
     - name: Checkout QGIS repo
@@ -35,15 +30,11 @@ jobs:
 
     - name: Setup build variables
       run: |
-        if [ "$BUILD_REASON" = "PullRequest" ]; then
-          branch=$SYSTEM_PULLREQUEST_TARGETBRANCH
-          pr=$SYSTEM_PULLREQUEST_PULLREQUESTNUMBER
-        else
-          branch=$BUILD_SOURCEBRANCHNAME
-        fi
+        branch=${{ github.ref_name }}
+        BUILD_SOURCEVERSION=${{ github.sha }}
 
         echo "BRANCH: ${branch}"
-        echo "PR: ${pr}"
+        echo "BUILD_SOURCEVERSION: ${BUILD_SOURCEVERSION}"
         echo "LR: ${LR}"
         echo "LTR: ${LTR}"
 
@@ -66,16 +57,12 @@ jobs:
         major=$(sed -ne 's/^SET(CPACK_PACKAGE_VERSION_MAJOR "\([0-9]*\)")\s*$/\1/ip' CMakeLists.txt)
         minor=$(sed -ne 's/^SET(CPACK_PACKAGE_VERSION_MINOR "\([0-9]*\)")\s*$/\1/ip' CMakeLists.txt)
         patch=$(sed -ne 's/^SET(CPACK_PACKAGE_VERSION_PATCH "\([0-9]*\)")\s*$/\1/ip' CMakeLists.txt)
-        binary=1
+        binary=${{ github.run_number }}
 
         version=$major.$minor.$patch
         sha="${BUILD_SOURCEVERSION:0:10}"
 
-        if [ "$BUILD_REASON" = "PullRequest" ]; then
-          buildname="PR $pr / $branch ($BUILD_BUILDID) ($sha) ($OSGEO4W_PKG $target $OSGEO4W_ARCH)"   # no colons allowed here
-        else
-          buildname="$OSGEO4W_PKG-$version-$sha-$target-VC14-$OSGEO4W_ARCH"
-        fi
+        buildname="$OSGEO4W_PKG-$version-$sha-$target-VC14-$OSGEO4W_ARCH"
 
         echo "TARGET=$target" >> ${GITHUB_ENV}
         echo "OSGEO4W_PKG=$OSGEO4W_PKG" >> ${GITHUB_ENV}
@@ -86,19 +73,29 @@ jobs:
         echo "BINARY=$binary" >> ${GITHUB_ENV}
         echo "VERSION=$version" >> ${GITHUB_ENV}
         echo "BUILDNAME=$buildname" >> ${GITHUB_ENV}
+
+        echo "TARGET: ${TARGET}"
+        echo "OSGEO4W_PKG: ${OSGEO4W_PKG}"
+        echo "OSGEO4W_DEPS: ${OSGEO4W_DEPS}"
+        echo "MAJOR: ${MAJOR}"
+        echo "MINOR: ${MINOR}"
+        echo "PATCH: ${PATCH}"
+        echo "BINARY: ${BINARY}"
+        echo "VERSION: ${VERSION}"
+        echo "BUILDNAME: ${BUILDNAME}"
       shell: bash
 
     - name: Download cygwin Installer
-      run: curl --output c:/setup-x86.exe https://cygwin.com/setup-x86.exe
+      run: curl --output c:/setup-x86_64.exe https://cygwin.com/setup-x86_64.exe
 
     - name: Download OSGeo4W Installer
-      run: curl --output c:/osgeo4w-setup.exe http://ftp.osuosl.org/pub/osgeo/download/osgeo4w/osgeo4w-setup-%OSGEO4W_ARCH%.exe
+      run: curl --output c:/osgeo4w-setup.exe http://ftp.osuosl.org/pub/osgeo/download/osgeo4w/osgeo4w-setup.exe
 
     - name: Download Ninja
       run: curl --location-trusted --output c:/ninja.zip https://github.com/ninja-build/ninja/releases/download/v1.9.0/ninja-win.zip
 
     - name: Installing cygwin
-      run: ms-windows/osgeo4w/runasadmin.ps1 c:/setup-x86.exe -qnNdO -R C:/cygwin -s http://cygwin.mirror.constant.com -l C:/temp/cygwin -P "bison,flex,git,poppler,doxygen,unzip"
+      run: ms-windows/osgeo4w/runasadmin.ps1 c:/setup-x86_64.exe -qnNdO -R C:/cygwin -s http://cygwin.mirror.constant.com -l C:/temp/cygwin -P "bison,flex,git,poppler,doxygen,unzip"
       shell: powershell
 
     - name: Installing OSGeo4W
