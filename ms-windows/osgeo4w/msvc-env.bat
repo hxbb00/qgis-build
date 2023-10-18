@@ -47,7 +47,8 @@ for /r "%PF86%\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\" %%i in (*
     )
 )
 
-set CMAKE_COMPILER_PATH=%matchVC:~0,-7%
+set VC_COMPILER_PATH=%matchVC:~0,-7%
+set CMAKE_COMPILER_PATH=%VC_COMPILER_PATH%
 
 if "%CC%"=="" set CC=%CMAKE_COMPILER_PATH:\=/%/cl.exe
 if "%CXX%"=="" set CXX=%CMAKE_COMPILER_PATH:\=/%/cl.exe
