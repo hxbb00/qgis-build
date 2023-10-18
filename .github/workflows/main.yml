@@ -29,8 +29,15 @@ jobs:
         repository: qgis/QGIS
         
     - name: Checkout QGIS build patch
-      uses: actions/checkout@v4
-      
+      shell: cmd
+      run: |
+        git clone https://github.com/hxbb00/qgis-build.git C:\_work2
+
+    - name: copy patch
+      shell: bash
+      run: |
+        cp -r C:/_work2/ms-windows ./ms-windows
+        
     - name: Setup build variables
       run: |
         branch=${{ github.ref_name }}
