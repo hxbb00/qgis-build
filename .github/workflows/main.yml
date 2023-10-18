@@ -111,7 +111,7 @@ jobs:
       shell: powershell
 
     - name: Installing OSGeo4W
-      run: ms-windows/osgeo4w/runasadmin.ps1 c:/osgeo4w-setup.exe --autoaccept --advanced --arch $env:OSGEO4W_ARCH --quiet-mode --upgrade-also --root $env:OSGEO4W_ROOT --only-site -s http://ftp.osuosl.org/pub/osgeo/download/osgeo4w/v2 -l c:/temp/osgeo4w -P $env:OSGEO4W_DEPS -P python3-clcache -P qt5-devel -P python3-devel -P grass
+      run: ms-windows/osgeo4w/runasadmin.ps1 c:/osgeo4w-setup.exe --autoaccept --advanced --arch $env:OSGEO4W_ARCH --quiet-mode --upgrade-also --root $env:OSGEO4W_ROOT --only-site -s http://ftp.osuosl.org/pub/osgeo/download/osgeo4w/v2 -l c:/temp/osgeo4w -P $env:OSGEO4W_DEPS -P python3-clcache -P python3-core -P qt5-devel -P python3-devel -P grass -P qt5-libs
       shell: powershell
 
     - name: Clear package caches
