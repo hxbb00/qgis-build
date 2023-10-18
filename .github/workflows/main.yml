@@ -102,6 +102,12 @@ jobs:
         mkdir C:\cygwin
         mkdir C:\OSGeo4W64
 
+    - name: copy runasadmin
+      shell: bash
+      run: |
+        cp ms-windows/osgeo4w/runasadmin.ps1 C:\cygwin\
+        cp ms-windows/osgeo4w/runasadmin.ps1 C:\OSGeo4W64\
+        
     - name: Download cygwin Installer
       run: curl --output c:/setup-x86_64.exe https://cygwin.com/setup-x86_64.exe
 
