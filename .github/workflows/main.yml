@@ -101,7 +101,7 @@ jobs:
       shell: powershell
 
     - name: Installing OSGeo4W
-      run: ms-windows/osgeo4w/runasadmin.ps1 c:/osgeo4w-setup.exe --autoaccept --advanced --arch $env:OSGEO4W_ARCH --quiet-mode --upgrade-also --root $env:OSGEO4W_ROOT --only-site -s http://ftp.osuosl.org/pub/osgeo/download/osgeo4w/v2 -l c:/temp/osgeo4w -P $env:OSGEO4W_DEPS -P python3-clcache
+      run: ms-windows/osgeo4w/runasadmin.ps1 c:/osgeo4w-setup.exe --autoaccept --advanced --arch $env:OSGEO4W_ARCH --quiet-mode --upgrade-also --root $env:OSGEO4W_ROOT --only-site -s http://ftp.osuosl.org/pub/osgeo/download/osgeo4w/v2 -l c:/temp/osgeo4w -P $env:OSGEO4W_DEPS -P python3-clcache -P qt5-devel -P python3-devel -P grass
       shell: powershell
 
     - name: Clear package caches
@@ -116,7 +116,7 @@ jobs:
     - name: Display tool versions
       run: |
         set PATH=%OSGEO4W_ROOT%\bin;%ProgramFiles%\CMake\bin;%PATH%
-        dir %OSGEO4W_ROOT%\bin /a
+        dir $env:OSGEO4W_ROOT\bin /a
         cmake --version
         ctest --version
         ninja --version
