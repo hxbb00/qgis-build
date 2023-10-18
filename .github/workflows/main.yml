@@ -116,7 +116,7 @@ jobs:
     - name: Display tool versions
       run: |
         set PATH=%OSGEO4W_ROOT%\bin;%ProgramFiles%\CMake\bin;%PATH%
-        dir $env:OSGEO4W_ROOT\bin /a
+        dir c:\ /a
         cmake --version
         ctest --version
         ninja --version
