@@ -67,6 +67,8 @@ call "%OSGEO4W_ROOT%\bin\qt5_env.bat"
 set VS140COMNTOOLS=%PF86%\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\
 call "%PF86%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" %VCARCH%
 
+path %path%;%CMAKE_COMPILER_PATH%
+
 set GRASS7=
 if exist %OSGEO4W_ROOT%\bin\grass74.bat set GRASS7=%OSGEO4W_ROOT%\bin\grass74.bat
 if exist %OSGEO4W_ROOT%\bin\grass76.bat set GRASS7=%OSGEO4W_ROOT%\bin\grass76.bat
