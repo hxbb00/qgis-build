@@ -27,27 +27,26 @@ goto usage
 
 :x86
 set VCARCH=x86
-set matchVcStr=bin\Hostx86\x86
 set DBGHLP_PATH=%PF86%\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\Remote Debugger\x86
 set SETUPAPI_LIBRARY=%PF86%\Windows Kits\10\Lib\%VCSDK%\um\x86\SetupAPI.Lib
 goto archset
 
 :x86_64
 set VCARCH=amd64
-set matchVcStr=bin\Hostx64\x64
 set DBGHLP_PATH=%PF86%\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\Remote Debugger\x64
 set SETUPAPI_LIBRARY=%PF86%\Windows Kits\10\Lib\%VCSDK%\um\x64\SetupAPI.Lib
 
 :archset
 if not exist "%SETUPAPI_LIBRARY%" (echo SETUPAPI_LIBRARY not found & goto error)
 
-for /r "%PF86%\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\" %%i in (*cl.exe) do (
-    echo %%i | findstr %matchVcStr% >nul && (
-        set matchVC=%%i
-    )
-)
+set VS140COMNTOOLS=%PF86%\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\
+call "%PF86%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" %VCARCH%
 
-set VC_COMPILER_PATH=%matchVC:~0,-7%
+for /f "delims=" %%i in ('where cl') do set resultcl=%%i
+
+set VC_COMPILER_PATH=%resultcl:~0,-7%
+echo FOUND CL.EXE
+echo %VC_COMPILER_PATH%
 set CMAKE_COMPILER_PATH=%VC_COMPILER_PATH%
 
 if "%CC%"=="" set CC=%CMAKE_COMPILER_PATH:\=/%/cl.exe
@@ -64,9 +63,6 @@ if not exist "%OSGEO4W_ROOT%\bin\o4w_env.bat" (echo o4w_env.bat not found & goto
 call "%OSGEO4W_ROOT%\bin\o4w_env.bat"
 call "%OSGEO4W_ROOT%\etc\ini\python3.bat"
 call "%OSGEO4W_ROOT%\etc\ini\qt5.bat"
-
-set VS140COMNTOOLS=%PF86%\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\
-call "%PF86%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" %VCARCH%
 
 path %path%;%CMAKE_COMPILER_PATH%
 
