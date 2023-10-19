@@ -39,6 +39,17 @@ set SETUPAPI_LIBRARY=%PF86%\Windows Kits\10\Lib\%VCSDK%\um\x64\SetupAPI.Lib
 :archset
 if not exist "%SETUPAPI_LIBRARY%" (echo SETUPAPI_LIBRARY not found & goto error)
 
+if "%OSGEO4W_ROOT%"=="" if "%ARCH%"=="x86" (
+	set OSGEO4W_ROOT=C:\OSGeo4W
+) else (
+	set OSGEO4W_ROOT=C:\OSGeo4W64
+)
+
+if not exist "%OSGEO4W_ROOT%\bin\o4w_env.bat" (echo o4w_env.bat not found & goto error)
+call "%OSGEO4W_ROOT%\bin\o4w_env.bat"
+call "%OSGEO4W_ROOT%\etc\ini\python3.bat"
+call "%OSGEO4W_ROOT%\etc\ini\qt5.bat"
+
 set VS140COMNTOOLS=%PF86%\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\
 call "%PF86%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" %VCARCH%
 
@@ -52,17 +63,6 @@ set CMAKE_COMPILER_PATH=%VC_COMPILER_PATH%
 if "%CC%"=="" set CC=%CMAKE_COMPILER_PATH:\=/%/cl.exe
 if "%CXX%"=="" set CXX=%CMAKE_COMPILER_PATH:\=/%/cl.exe
 set CLCACHE_CL=%CMAKE_COMPILER_PATH:\=/%/cl.exe
-
-if "%OSGEO4W_ROOT%"=="" if "%ARCH%"=="x86" (
-	set OSGEO4W_ROOT=C:\OSGeo4W
-) else (
-	set OSGEO4W_ROOT=C:\OSGeo4W64
-)
-
-if not exist "%OSGEO4W_ROOT%\bin\o4w_env.bat" (echo o4w_env.bat not found & goto error)
-call "%OSGEO4W_ROOT%\bin\o4w_env.bat"
-call "%OSGEO4W_ROOT%\etc\ini\python3.bat"
-call "%OSGEO4W_ROOT%\etc\ini\qt5.bat"
 
 path %path%;%CMAKE_COMPILER_PATH%
 
