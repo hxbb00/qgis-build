@@ -41,7 +41,7 @@ set SETUPAPI_LIBRARY=%PF86%\Windows Kits\10\Lib\%VCSDK%\um\x64\SetupAPI.Lib
 :archset
 if not exist "%SETUPAPI_LIBRARY%" (echo SETUPAPI_LIBRARY not found & goto error)
 
-for /r "%PF86%\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\" %%i in (*/cl.exe) do (
+for /r "%PF86%\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\" %%i in (*cl.exe) do (
     echo %%i | findstr %matchVcStr% >nul && (
         set matchVC=%%i
     )
