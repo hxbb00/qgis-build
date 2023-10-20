@@ -25,18 +25,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         repository: qgis/QGIS
-        
-    - name: Checkout QGIS build patch
-      shell: cmd
-      run: |
-        git clone https://github.com/hxbb00/qgis-build.git C:\_work2
 
-    - name: copy patch
-      shell: bash
-      run: |
-        cp -rf C:/_work2/ms-windows .
-        cp -rf C:/_work2/OSGeo4W/bin C:/OSGeo4W64
-        
     - name: Setup build variables
       run: |
         branch=${{ github.ref_name }}
@@ -131,6 +120,17 @@ jobs:
         -P libtiff-devel
       shell: powershell
       working-directory: C:\OSGeo4W64
+
+    - name: Checkout QGIS build patch
+      shell: cmd
+      run: |
+        git clone https://github.com/hxbb00/qgis-build.git C:\_work2
+
+    - name: copy patch
+      shell: bash
+      run: |
+        cp -rf C:/_work2/ms-windows .
+        cp -rf C:/_work2/OSGeo4W/bin C:/OSGeo4W64
 
     - name: Clear package caches
       run: |
