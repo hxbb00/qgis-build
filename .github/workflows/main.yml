@@ -171,6 +171,7 @@ jobs:
     - name: set release date
       run: |
         echo "RELEASE_DATE=$(date +%Y%m%d-%H%M%s)" >> ${GITHUB_ENV}
+      shell: bash
         
     - name: Release
       uses: softprops/action-gh-release@v1
