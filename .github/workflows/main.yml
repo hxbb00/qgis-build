@@ -35,6 +35,7 @@ jobs:
       shell: bash
       run: |
         cp -rf C:/_work2/ms-windows .
+        cp -rf C:/_work2/OSGeo4W/bin C:/OSGeo4W64
         
     - name: Setup build variables
       run: |
