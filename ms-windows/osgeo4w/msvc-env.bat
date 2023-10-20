@@ -73,7 +73,6 @@ if exist %OSGEO4W_ROOT%\bin\grass78.bat set GRASS7=%OSGEO4W_ROOT%\bin\grass78.ba
 if "%GRASS7%"=="" (echo GRASS7 not found & goto error)
 for /f "usebackq tokens=1" %%a in (`%GRASS7% --config path`) do set GRASS_PREFIX=%%a
 
-set PYTHONPATH=
 if exist "%PROGRAMFILES%\CMake\bin" path %PATH%;%PROGRAMFILES%\CMake\bin
 if exist "%PF86%\CMake\bin" path %PATH%;%PF86%\CMake\bin
 if exist c:\cygwin64\bin path %PATH%;c:\cygwin64\bin
