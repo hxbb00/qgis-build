@@ -166,7 +166,7 @@ jobs:
       shell: cmd
 
     - name: pack build files
-      run: zip -r build-qgis-dev-x86_64.zip ./ms-windows/osgeo4w/build-qgis-dev-x86_64
+      run: 7z a build-qgis-dev-x86_64.zip ./ms-windows/osgeo4w/build-qgis-dev-x86_64
       
     - name: set release date
       run: |
