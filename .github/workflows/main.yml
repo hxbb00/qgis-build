@@ -126,7 +126,7 @@ jobs:
         --quiet-mode --upgrade-also --root $env:OSGEO4W_ROOT --only-site 
         -s http://ftp.osuosl.org/pub/osgeo/download/osgeo4w/v2 -l c:/temp/osgeo4w 
         -P $env:OSGEO4W_DEPS -P python3-clcache -P python3-core -P qt5-devel -P python3-devel -P grass 
-        -P qt5-libs -P zstd-devel -P pdal-libs -P pdal -P pdal-devel -P draco -P draco-devel -P proj-devel
+        -P qt5-libs -P zstd-devel -P pdal-libs -P pdal -P pdal-devel -P draco -P draco-devel -P proj-devel -P curl-devel
         -P libtiff-devel
       shell: powershell
       working-directory: C:\OSGeo4W64
@@ -147,7 +147,7 @@ jobs:
         dir c:\ /a
         dir c:\OSGeo4W64 /a
         dir c:\OSGeo4W64\bin /a
-        dir c:\OSGeo4W64\etc /a
+        dir c:\OSGeo4W64\etc\ini /a
         cmake --version
         ctest --version
         ninja --version
