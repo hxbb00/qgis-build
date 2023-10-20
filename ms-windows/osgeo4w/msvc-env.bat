@@ -47,8 +47,8 @@ if "%OSGEO4W_ROOT%"=="" if "%ARCH%"=="x86" (
 
 if not exist "%OSGEO4W_ROOT%\bin\o4w_env.bat" (echo o4w_env.bat not found & goto error)
 call "%OSGEO4W_ROOT%\bin\o4w_env.bat"
-call "%OSGEO4W_ROOT%\etc\ini\python3.bat"
-call "%OSGEO4W_ROOT%\etc\ini\qt5.bat"
+call "%OSGEO4W_ROOT%\bin\py3_env.bat"
+call "%OSGEO4W_ROOT%\bin\qt5_env.bat"
 
 set VS140COMNTOOLS=%PF86%\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\
 call "%PF86%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" %VCARCH%
