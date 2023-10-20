@@ -148,6 +148,7 @@ jobs:
         dir c:\ /a
         dir c:\OSGeo4W64 /a
         dir c:\OSGeo4W64\bin /a
+        dir c:\OSGeo4W64\apps /a
         dir c:\OSGeo4W64\etc\ini /a
         cmake --version
         ctest --version
