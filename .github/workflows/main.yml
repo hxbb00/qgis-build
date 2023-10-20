@@ -117,7 +117,7 @@ jobs:
         -s http://ftp.osuosl.org/pub/osgeo/download/osgeo4w/v2 -l c:/temp/osgeo4w 
         -P $env:OSGEO4W_DEPS -P python3-clcache -P python3-core -P qt5-devel -P python3-devel -P grass 
         -P qt5-libs -P zstd-devel -P pdal-libs -P pdal -P pdal-devel -P draco -P draco-devel -P proj-devel -P curl-devel
-        -P libtiff-devel
+        -P libtiff-devel -P python3-qscintilla -P qscintilla-devel
       shell: powershell
       working-directory: C:\OSGeo4W64
 
@@ -164,4 +164,18 @@ jobs:
         set OSGEO4W_CXXFLAGS=/MD /MP /Od /D NDEBUG
         package-nightly.cmd %VERSION% %BINARY% %OSGEO4W_PKG% %OSGEO4W_ARCH% %BUILD_SHA%
       shell: cmd
+
+    - name: pack build files
+      run: zip -r build-qgis-dev-x86_64.zip ./ms-windows/osgeo4w/build-qgis-dev-x86_64
+      
+    - name: set release date
+      run: |
+        echo "RELEASE_DATE=$(date +%Y%m%d-%H%M%s)" >> ${GITHUB_ENV}
+        
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      with:
+        name: build-qgis-dev-x86_64
+        tag_name: ${{ env.RELEASE_DATE }}
+        files: build-qgis-dev-x86_64.zip
                     
