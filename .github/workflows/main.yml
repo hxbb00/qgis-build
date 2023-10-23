@@ -159,6 +159,7 @@ jobs:
       run: |
         echo on
         set PATH=c:\cygwin\bin;%OSGEO4W_ROOT%\apps\Python39;%OSGEO4W_ROOT%\bin;%PATH%
+        git config --global --add safe.directory .
         cd ms-windows/osgeo4w
         type nul> skippackage
         set OSGEO4W_CXXFLAGS=/MD /MP /Od /D NDEBUG
