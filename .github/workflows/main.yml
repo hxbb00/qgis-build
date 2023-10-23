@@ -106,7 +106,7 @@ jobs:
       run: curl --location-trusted --output c:/ninja.zip https://github.com/ninja-build/ninja/releases/download/v1.9.0/ninja-win.zip
 
     - name: Installing cygwin
-      run: C:/cygwin/runasadmin.ps1 c:/setup-x86_64.exe -qnNdO -R C:/cygwin -s http://cygwin.mirror.constant.com -l C:/temp/cygwin -P "bison,flex,git,poppler,doxygen,unzip"
+      run: C:/cygwin/runasadmin.ps1 c:/setup-x86_64.exe -qnNdO -R C:/cygwin -s http://cygwin.mirror.constant.com -l C:/temp/cygwin -P "bison,flex,poppler,doxygen,unzip"
       shell: powershell
       working-directory: C:\cygwin
 
@@ -159,7 +159,6 @@ jobs:
       run: |
         echo on
         set PATH=c:\cygwin\bin;%OSGEO4W_ROOT%\apps\Python39;%OSGEO4W_ROOT%\bin;%PATH%
-        git config --global --add safe.directory ${{ github.workspace }}
         cd ms-windows/osgeo4w
         type nul> skippackage
         set OSGEO4W_CXXFLAGS=/MD /MP /Od /D NDEBUG
