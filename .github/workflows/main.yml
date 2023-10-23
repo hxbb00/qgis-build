@@ -117,7 +117,7 @@ jobs:
         -s http://ftp.osuosl.org/pub/osgeo/download/osgeo4w/v2 -l c:/temp/osgeo4w 
         -P $env:OSGEO4W_DEPS -P python3-clcache -P python3-core -P qt5-devel -P python3-devel -P grass 
         -P qt5-libs -P zstd-devel -P pdal-libs -P pdal -P pdal-devel -P draco -P draco-devel -P proj-devel -P curl-devel
-        -P libtiff-devel -P python3-qscintilla -P qscintilla-devel
+        -P libtiff-devel -P qscintilla -P python3-qscintilla -P qscintilla-devel
       shell: powershell
       working-directory: C:\OSGeo4W64
 
