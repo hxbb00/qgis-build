@@ -162,7 +162,6 @@ jobs:
         cd ms-windows/osgeo4w
         type nul> skippackage
         set OSGEO4W_CXXFLAGS=/MD /MP /Od /D NDEBUG
-        pip install qscintilla -i http://pypi.douban.com/simple/ --trusted-host pypi.douban.com
         package-nightly.cmd %VERSION% %BINARY% %OSGEO4W_PKG% %OSGEO4W_ARCH% %BUILD_SHA%
       shell: cmd
 
