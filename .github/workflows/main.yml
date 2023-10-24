@@ -115,7 +115,7 @@ jobs:
         C:/OSGeo4W64/runasadmin.ps1 c:/osgeo4w-setup.exe --autoaccept --advanced --arch $env:OSGEO4W_ARCH 
         --quiet-mode --upgrade-also --root $env:OSGEO4W_ROOT --only-site 
         -s http://ftp.osuosl.org/pub/osgeo/download/osgeo4w/v2 -l c:/temp/osgeo4w 
-        -P $env:OSGEO4W_DEPS -P python3-clcache -P python3-core -P qt5-devel -P python3-devel -P grass 
+        -P $env:OSGEO4W_DEPS -P python3-core -P qt5-devel -P python3-devel -P grass -P python3-pyqt5
         -P qt5-libs -P zstd-devel -P pdal-libs -P pdal -P pdal-devel -P draco -P draco-devel -P proj-devel -P curl-devel
         -P libtiff-devel -P qscintilla -P python3-qscintilla -P qscintilla-devel
       shell: powershell
