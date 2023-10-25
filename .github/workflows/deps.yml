@@ -1,4 +1,4 @@
-name: build-deps-windows
+name: cache-deps-windows
 
 on:
   workflow_dispatch:
@@ -120,6 +120,19 @@ jobs:
         -P libtiff-devel -P qscintilla -P python3-qscintilla -P qscintilla-devel
       shell: powershell
       working-directory: C:\OSGeo4W64
+    
+    - name: reinstall pyqt5
+      shell: cmd
+      run: |
+        SET PYTHONHOME=%OSGEO4W_ROOT%\apps\Python39
+        SET PYTHONPATH=%PYTHONHOME%;%PYTHONHOME%\Scripts;%PYTHONHOME%\Lib;%PYTHONHOME%\Lib\site-packages
+        SET PYTHONUTF8=1
+        SET PYTHON_EXECUTABLE=%PYTHONHOME%\python.exe
+        SET Python_ROOT_DIR=%PYTHONHOME%\
+        PATH %PYTHONPATH%;%PATH%
+        pip uninstall PyQt5
+        pip install PyQt5 -i https://pypi.tuna.tsinghua.edu.cn/simple/
+        python -c "from PyQt5.Qsci import QSCINTILLA_VERSION_STR; print(QSCINTILLA_VERSION_STR)"
 
     - name: Checkout QGIS build patch
       shell: cmd
