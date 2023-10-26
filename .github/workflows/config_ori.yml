@@ -93,7 +93,8 @@ jobs:
       run: curl --output c:/build-OSGeo4W64-dev-x86_64.zip https://github.com/hxbb00/qgis-build/releases/download/20231026-07041698303890/build-OSGeo4W64-dev-x86_64.zip
       
     - name: unzip cygwin & OSGeo4W
-      run: >
+      run: |
+        dir c:\ /a
         7z x c:/build-cygwin-dev-x86_64.zip -o c:\
         7z x c:/build-OSGeo4W64-dev-x86_64.zip -o c:\
 
