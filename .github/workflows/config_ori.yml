@@ -97,7 +97,7 @@ jobs:
       run: curl --output c:/setup-x86.exe https://cygwin.com/setup-x86.exe
 
     - name: Download OSGeo4W V2 Installer
-      run: curl --output c:/osgeo4w-setup.exe http://ftp.osuosl.org/pub/osgeo/download/osgeo4w/osgeo4w-setup-%OSGEO4W_ARCH%.exe
+      run: curl --output c:/osgeo4w-setup.exe http://ftp.osuosl.org/pub/osgeo/download/osgeo4w/osgeo4w-setup-$env:OSGEO4W_ARCH.exe
       
     - name: Download Ninja
       run: curl --location-trusted --output c:/ninja.zip https://github.com/ninja-build/ninja/releases/download/v1.9.0/ninja-win.zip
