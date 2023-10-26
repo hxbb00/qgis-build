@@ -1,4 +1,4 @@
-name: config-on-cache
+name: config-by-cache
 
 on:
   workflow_dispatch:
@@ -101,7 +101,6 @@ jobs:
         
     - name: unzip cygwin & OSGeo4W
       run: |
-        dir ./ /a
         7z x ./build-cygwin-dev-x86_64.zip -oc:\
         7z x ./build-OSGeo4W64-dev-x86_64.zip -oc:\
       shell: cmd
