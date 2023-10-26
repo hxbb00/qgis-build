@@ -1,4 +1,4 @@
-name: cache-deps-windows
+name: cache-windows-deps
 
 on:
   workflow_dispatch:
@@ -93,8 +93,7 @@ jobs:
     - name: copy runasadmin
       shell: bash
       run: |
-        cp ms-windows/osgeo4w/runasadmin.ps1 C:/cygwin/
-        cp ms-windows/osgeo4w/runasadmin.ps1 C:/OSGeo4W64/
+        cp ms-windows/osgeo4w/runasadmin.ps1 C:/
         
     - name: Download cygwin Installer
       run: curl --output c:/setup-x86_64.exe https://cygwin.com/setup-x86_64.exe
@@ -106,13 +105,13 @@ jobs:
       run: curl --location-trusted --output c:/ninja.zip https://github.com/ninja-build/ninja/releases/download/v1.9.0/ninja-win.zip
 
     - name: Installing cygwin
-      run: C:/cygwin/runasadmin.ps1 c:/setup-x86_64.exe -qnNdO -R C:/cygwin -s http://cygwin.mirror.constant.com -l C:/temp/cygwin -P "bison,flex,poppler,doxygen,unzip"
+      run: C:/runasadmin.ps1 c:/setup-x86_64.exe -qnNdO -R C:/cygwin -s http://cygwin.mirror.constant.com -l C:/temp/cygwin -P "bison,flex,poppler,doxygen,unzip"
       shell: powershell
       working-directory: C:\cygwin
 
     - name: Installing OSGeo4W V2
       run: >
-        C:/OSGeo4W64/runasadmin.ps1 c:/osgeo4w-setup.exe --autoaccept --advanced --arch $env:OSGEO4W_ARCH 
+        C:/runasadmin.ps1 c:/osgeo4w-setup.exe --autoaccept --advanced --arch $env:OSGEO4W_ARCH 
         --quiet-mode --upgrade-also --root $env:OSGEO4W_ROOT --only-site 
         -s http://ftp.osuosl.org/pub/osgeo/download/osgeo4w/v2 -l c:/temp/osgeo4w 
         -P $env:OSGEO4W_DEPS -P python3-core -P qt5-devel -P python3-devel -P grass -P python3-pyqt5 -P python3-pyqt5-sip
@@ -145,7 +144,6 @@ jobs:
     - name: copy patch
       shell: bash
       run: |
-        cp -rf C:/_work2/ms-windows .
         cp -rf C:/_work2/OSGeo4W/bin C:/OSGeo4W64
 
     - name: Clear package caches
