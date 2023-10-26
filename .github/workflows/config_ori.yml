@@ -84,6 +84,11 @@ jobs:
         echo "BUILDNAME: $buildname"
         echo "BUILD_SHA: $sha"
       shell: bash
+
+    - name: Set up the working directory
+      run: |
+        mkdir C:\cygwin
+        mkdir C:\OSGeo4W64
       
     - name: Download cygwin Installer
       run: curl --output c:/setup-x86.exe https://cygwin.com/setup-x86.exe
