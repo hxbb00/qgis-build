@@ -87,16 +87,22 @@ jobs:
       shell: bash
 
     - name: Download cygwin cache
-      run: curl --output c:/build-cygwin-dev-x86_64.zip https://github.com/hxbb00/qgis-build/releases/download/20231026-07041698303890/build-cygwin-dev-x86_64.zip
-
+      uses: robinraju/release-downloader@v1.8
+      with:
+        latest: true
+        fileName: "build-cygwin-dev-x86_64.zip"
+        
     - name: Download OSGeo4W cache
-      run: curl --output c:/build-OSGeo4W64-dev-x86_64.zip https://github.com/hxbb00/qgis-build/releases/download/20231026-07041698303890/build-OSGeo4W64-dev-x86_64.zip
-      
+      uses: robinraju/release-downloader@v1.8
+      with:
+        latest: true
+        fileName: "build-OSGeo4W64-dev-x86_64.zip"
+        
     - name: unzip cygwin & OSGeo4W
       run: |
-        dir c:\ /a
-        7z x c:/build-cygwin-dev-x86_64.zip -o c:\
-        7z x c:/build-OSGeo4W64-dev-x86_64.zip -o c:\
+        dir ./ /a
+        7z x ./build-cygwin-dev-x86_64.zip -oc:\
+        7z x ./build-OSGeo4W64-dev-x86_64.zip -oc:\
       shell: cmd
       
     - name: Display tool versions
