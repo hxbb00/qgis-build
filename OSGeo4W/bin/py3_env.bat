@@ -4,6 +4,3 @@ SET PYTHONUTF8=1
 SET PYTHON_EXECUTABLE=%PYTHONHOME%\python.exe
 SET Python_ROOT_DIR=%PYTHONHOME%\
 PATH %PYTHONPATH%;%PATH%
-pip uninstall -y PyQt5
-pip install PyQt5 -i https://pypi.tuna.tsinghua.edu.cn/simple/
-pip install qscintilla -i http://pypi.douban.com/simple/ --trusted-host pypi.douban.com
