@@ -132,8 +132,9 @@ jobs:
         SET PATH=%PYTHONPATH%;%PATH%
         where pip
         where python
-        pip uninstall PyQt5
+        pip uninstall -y PyQt5
         pip install PyQt5 -i https://pypi.tuna.tsinghua.edu.cn/simple/
+        pip install qscintilla -i http://pypi.douban.com/simple/ --trusted-host pypi.douban.com
         python -c "from PyQt5.Qsci import QSCINTILLA_VERSION_STR; print(QSCINTILLA_VERSION_STR)"
 
     - name: Checkout QGIS build patch
