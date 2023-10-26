@@ -90,7 +90,9 @@ jobs:
       run: |
         mkdir C:\cygwin
         mkdir C:\OSGeo4W64
-      
+        mkdir c:\temp\cygwin
+        mkdir c:\temp\osgeo4w
+        
     - name: Download cygwin Installer
       run: curl --output c:/setup-x86.exe https://cygwin.com/setup-x86.exe
 
