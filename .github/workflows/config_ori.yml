@@ -97,7 +97,7 @@ jobs:
       run: curl --output c:/setup-x86.exe https://cygwin.com/setup-x86.exe
 
     - name: Download OSGeo4W Installer
-      run: curl --output c:/osgeo4w-setup.exe http://ftp.osuosl.org/pub/osgeo/download/osgeo4w/osgeo4w-setup-$OSGEO4W_ARCH.exe
+      run: curl --output c:/osgeo4w-setup.exe http://ftp.osuosl.org/pub/osgeo/download/osgeo4w/osgeo4w-setup-${{env.OSGEO4W_ARCH}}.exe
       
     - name: Download Ninja
       run: curl --location-trusted --output c:/ninja.zip https://github.com/ninja-build/ninja/releases/download/v1.9.0/ninja-win.zip
@@ -110,10 +110,10 @@ jobs:
 
     - name: Installing OSGeo4W
       run: >
-        ms-windows/osgeo4w/runasadmin.ps1 c:\osgeo4w-setup.exe --autoaccept --advanced --arch $OSGEO4W_ARCH 
-        --quiet-mode --upgrade-also --root $OSGEO4W_ROOT --only-site 
+        ms-windows/osgeo4w/runasadmin.ps1 c:\osgeo4w-setup.exe --autoaccept --advanced --arch ${{env.OSGEO4W_ARCH}} 
+        --quiet-mode --upgrade-also --root ${{env.OSGEO4W_ROOT}} --only-site 
         -s http://ftp.osuosl.org/pub/osgeo/download/osgeo4w -l c:/temp/osgeo4w 
-        -P $OSGEO4W_DEPS -P python3-clcache
+        -P ${{env.OSGEO4W_DEPS}} -P python3-clcache
       shell: powershell
 
     - name: Clear package caches
@@ -123,7 +123,7 @@ jobs:
       shell: cmd
 
     - name: Extracting Ninja
-      run: c:/cygwin/bin/unzip -o c:/ninja.zip -d $OSGEO4W_ROOT/bin
+      run: c:/cygwin/bin/unzip -o c:/ninja.zip -d ${{env.OSGEO4W_ROOT}}/bin
 
     - name: Display tool versions
       run: |
