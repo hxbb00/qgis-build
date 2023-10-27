@@ -148,7 +148,7 @@ jobs:
         echo "RELEASE_DATE=$(date +%Y%m%d-%H%M%s)" >> ${GITHUB_ENV}
       shell: bash
 
-    - name: Release cygwin
+    - name: Release qgis
       uses: softprops/action-gh-release@v1
       with:
         name: build-qgis-dev-x86_64
