@@ -1,0 +1,146 @@
+name: check-cache_build
+
+on:
+  workflow_dispatch:
+
+env:
+  LR: release-3_12
+  LTR: release-3_10
+  CACHE_RAG: 20231027-06421698388979
+  CTEST_CUSTOM_TESTS_IGNORE: ProcessingGdalAlgorithmsRasterTest;ProcessingGdalAlgorithmsVectorTest;ProcessingGrass7AlgorithmsImageryTest;ProcessingGrass7AlgorithmsRasterTest;ProcessingGrass7AlgorithmsVectorTest;ProcessingGuiTest;ProcessingOtbAlgorithmsTest;ProcessingQgisAlgorithmsTestPt1;ProcessingQgisAlgorithmsTestPt2;ProcessingQgisAlgorithmsTestPt3;ProcessingQgisAlgorithmsTestPt4;ProcessingScriptUtilsTest;PyQgsAnnotation;PyQgsAppStartup;PyQgsAuthManagerOAuth2OWSTest;PyQgsAuthManagerPasswordOWSTest;PyQgsAuthManagerPKIOWSTest;PyQgsAuthManagerProxy;PyQgsAuthSettingsWidget;PyQgsAuxiliaryStorage;PyQgsBlockingNetworkRequest;PyQgsExifTools;PyQgsFileDownloader;PyQgsFileUtils;PyQgsGeometryTest;PyQgsImageCache;PyQgsImportIntoPostGIS;PyQgsLayoutAtlas;PyQgsLayoutLegend;PyQgsLayoutMap;PyQgsLayoutMapGrid;PyQgsMapLayer;PyQgsOfflineEditingWFS;PyQgsOGRProvider;PyQgsOGRProviderGpkg;PyQgsOGRProviderSqlite;PyQgsPalLabelingCanvas;PyQgsPalLabelingLayout;PyQgsPalLabelingPlacement;PyQgsPointDisplacementRenderer;PyQgsProject;PyQgsProviderConnectionGpkg;PyQgsProviderConnectionPostgres;PyQgsPythonProvider;PyQgsRasterFileWriter;PyQgsRasterLayer;PyQgsSelectiveMasking;PyQgsServerAccessControlWMSGetlegendgraphic;PyQgsServerApi;PyQgsServerCacheManager;PyQgsServerLocaleOverride;PyQgsServerSecurity;PyQgsServerSettings;PyQgsServerWMS;PyQgsServerWMSDimension;PyQgsServerWMSGetFeatureInfo;PyQgsServerWMSGetLegendGraphic;PyQgsServerWMSGetMap;PyQgsServerWMSGetPrint;PyQgsServerWMSGetPrintExtra;PyQgsServerWMSGetPrintOutputs;PyQgsServerWMSGetPrintAtlas;PyQgsServerWMTS;PyQgsSettings;PyQgsShapefileProvider;PyQgsSpatialiteProvider;PyQgsSvgCache;PyQgsSymbolLayer;PyQgsTaskManager;PyQgsTextRenderer;PyQgsVectorFileWriter;PyQgsVectorLayer;PyQgsVectorLayerUtils;PyQgsVirtualLayerProvider;PyQgsWFSProviderGUI;PyQgsZipUtils;qgis_3drenderingtest;qgis_alignrastertest;qgis_arcgisrestutilstest;qgis_banned_keywords;qgis_browsermodeltest;qgis_callouttest;qgis_compositionconvertertest;qgis_coordinatereferencesystemtest;qgis_datadefinedsizelegendtest;qgis_datumtransformdialog;qgis_diagramtest;qgis_doxygen_order;qgis_dxfexporttest;qgis_expressiontest;qgis_filedownloader;qgis_geometrycheckstest;qgis_geometrytest;qgis_grassprovidertest7;qgis_imagecachetest;qgis_invertedpolygonrenderertest;qgis_labelingenginetest;qgis_layerdefinitiontest;qgis_layout3dmaptest;qgis_layouthtmltest;qgis_layoutlabeltest;qgis_layoutmapgridtest;qgis_layoutmaptest;qgis_layoutpicturetest;qgis_layoutscalebartest;qgis_layouttabletest;qgis_legendrenderertest;qgis_licenses;qgis_defwindowtitle;qgis_maprendererjobtest;qgis_maprotationtest;qgis_mapsettingsutilstest;qgis_maptooladdfeatureline;qgis_mimedatautilstest;qgis_networkaccessmanagertest;qgis_openclutilstest;qgis_painteffecttest;qgis_pallabelingtest;qgis_processingtest;qgis_projecttest;qgis_qgisappclipboard;qgis_rasterlayersaveasdialog;qgis_shellcheck;qgis_sipify;qgis_sip_include;qgis_sip_uptodate;qgis_spelling;qgis_styletest;qgis_svgcachetest;qgis_taskmanagertest;qgis_transformdialog;qgis_vectorfilewritertest;qgis_wcsprovidertest;qgis_ziplayertest;qgis_meshcalculator;qgis_pointlocatortest;PyQgsExpressionBuilderWidget;PyQgsDatumTransform;qgis_vertextool;PyQgsCoordinateOperationWidget;PyQgsProviderConnectionSpatialite;qgis_maptoolsplitpartstest;qgis_vectortilelayertest;qgis_ogrproviderguitest
+  
+jobs:
+  OSGeo4W:
+    strategy:
+      max-parallel: 4
+    runs-on: windows-2019
+    timeout-minutes: 360
+    
+    env:
+      OSGEO4W_ROOT: C:\OSGeo4W64
+      OSGEO4W_ARCH: x86_64
+      CLCACHE_DIR: c:\clcache-x86_64
+      PLATFORM: x64
+      
+    steps:
+    - name: Checkout QGIS repo
+      uses: actions/checkout@v4
+      with:
+        repository: hxbb00/QGIS
+
+    - name: Setup build variables
+      run: |
+        branch=${{ github.ref_name }}
+        BUILD_SOURCEVERSION=${{ github.sha }}
+
+        echo "BRANCH: ${branch}"
+        echo "BUILD_SOURCEVERSION: ${BUILD_SOURCEVERSION}"
+        echo "LR: ${LR}"
+        echo "LTR: ${LTR}"
+
+        case "${branch}" in
+        "${LTR}")
+          OSGEO4W_PKG=qgis-ltr-dev
+          OSGEO4W_DEPS=qgis-ltr-dev-deps
+          ;;
+        "${LR}")
+          OSGEO4W_PKG=qgis-rel-dev
+          OSGEO4W_DEPS=qgis-rel-dev-deps
+          ;;
+        *)
+          OSGEO4W_PKG=qgis-dev
+          OSGEO4W_DEPS=qgis-dev-deps
+          ;;
+        esac
+
+        target=Experimental
+        major=$(sed -ne 's/^SET(CPACK_PACKAGE_VERSION_MAJOR "\([0-9]*\)")\s*$/\1/ip' CMakeLists.txt)
+        minor=$(sed -ne 's/^SET(CPACK_PACKAGE_VERSION_MINOR "\([0-9]*\)")\s*$/\1/ip' CMakeLists.txt)
+        patch=$(sed -ne 's/^SET(CPACK_PACKAGE_VERSION_PATCH "\([0-9]*\)")\s*$/\1/ip' CMakeLists.txt)
+        binary=${{ github.run_number }}
+
+        version=$major.$minor.$patch
+        sha="${BUILD_SOURCEVERSION:0:10}"
+
+        buildname="$OSGEO4W_PKG-$version-$sha-$target-VC14-$OSGEO4W_ARCH"
+
+        echo "TARGET=$target" >> ${GITHUB_ENV}
+        echo "OSGEO4W_PKG=$OSGEO4W_PKG" >> ${GITHUB_ENV}
+        echo "OSGEO4W_DEPS=$OSGEO4W_DEPS" >> ${GITHUB_ENV}
+        echo "MAJOR=$major" >> ${GITHUB_ENV}
+        echo "MINOR=$minor" >> ${GITHUB_ENV}
+        echo "PATCH=$patch" >> ${GITHUB_ENV}
+        echo "BINARY=$binary" >> ${GITHUB_ENV}
+        echo "VERSION=$version" >> ${GITHUB_ENV}
+        echo "BUILDNAME=$buildname" >> ${GITHUB_ENV}
+        echo "BUILD_SHA=$sha" >> ${GITHUB_ENV}
+        
+        echo "TARGET: $target"
+        echo "OSGEO4W_PKG: $OSGEO4W_PKG"
+        echo "OSGEO4W_DEPS: $OSGEO4W_DEPS"
+        echo "MAJOR: $major"
+        echo "MINOR: $minor"
+        echo "PATCH: $patch"
+        echo "BINARY: $binary"
+        echo "VERSION: $version"
+        echo "BUILDNAME: $buildname"
+        echo "BUILD_SHA: $sha"
+      shell: bash
+
+    - name: Download cygwin cache
+      uses: robinraju/release-downloader@v1.8
+      with:
+        tag: ${{ env.CACHE_RAG }}
+        fileName: "build-cygwin-dev-x86_64.zip"
+        
+    - name: Download OSGeo4W cache
+      uses: robinraju/release-downloader@v1.8
+      with:
+        tag: ${{ env.CACHE_RAG }}
+        fileName: "build-OSGeo4W64-dev-x86_64.zip"
+        
+    - name: unzip cygwin & OSGeo4W
+      run: |
+        7z x ./build-cygwin-dev-x86_64.zip -oc:\
+        7z x ./build-OSGeo4W64-dev-x86_64.zip -oc:\
+      shell: cmd
+
+    - name: Checkout QGIS build patch
+      shell: cmd
+      run: |
+        git clone https://github.com/hxbb00/qgis-build.git C:\_work2
+
+    - name: copy patch
+      shell: bash
+      run: |
+        cp -rf C:/_work2/ms-windows .
+
+    - name: Display tool versions
+      run: |
+        set PATH=%OSGEO4W_ROOT%\bin;%ProgramFiles%\CMake\bin;%PATH%
+        dir . /a
+        dir c:\ /a
+        dir c:\OSGeo4W64 /a
+        dir c:\OSGeo4W64\bin /a
+        dir c:\OSGeo4W64\apps /a
+        dir c:\OSGeo4W64\etc\ini /a
+        cmake --version
+        ctest --version
+        ninja --version
+      shell: cmd
+      
+    - name: Build QGIS
+      run: |
+        echo on
+        set PATH=c:\cygwin\bin;%OSGEO4W_ROOT%\bin;%PATH%
+        cd ms-windows/osgeo4w
+        type nul> skippackage
+        set OSGEO4W_CXXFLAGS=/MD /MP /Od /D NDEBUG
+        package-nightly.cmd %VERSION% %BINARY% %OSGEO4W_PKG% %OSGEO4W_ARCH% %BUILD_SHA%
+      shell: cmd
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: Testing
+        path: |
+          ms-windows\osgeo4w\build-qgis-dev-x86_64\Testing
