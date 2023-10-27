@@ -132,6 +132,7 @@ jobs:
         where pip
         where python
         pip uninstall -y PyQt5
+        pip uninstall -y sip
         pip install PyQt5 -i https://pypi.tuna.tsinghua.edu.cn/simple/
         pip install qscintilla -i https://pypi.tuna.tsinghua.edu.cn/simple/
         pip install sip -i https://pypi.tuna.tsinghua.edu.cn/simple/
