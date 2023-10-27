@@ -1,7 +1,7 @@
 chcp 65001
 
 
-
+echo 'close Anti-virus software first'
 
 set VCSDK=10.0.17763.0
 
