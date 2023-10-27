@@ -134,6 +134,7 @@ jobs:
         pip uninstall -y PyQt5
         pip install PyQt5 -i https://pypi.tuna.tsinghua.edu.cn/simple/
         pip install qscintilla -i https://pypi.tuna.tsinghua.edu.cn/simple/
+        pip install sip -i https://pypi.tuna.tsinghua.edu.cn/simple/
         python -c "from PyQt5.Qsci import QSCINTILLA_VERSION_STR; print(QSCINTILLA_VERSION_STR)"
 
     - name: Checkout QGIS build patch
