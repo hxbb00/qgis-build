@@ -1,4 +1,4 @@
-name: build-by-cached-deps
+name: build-on-cached-deps
 
 on:
   workflow_dispatch:
@@ -120,7 +120,6 @@ jobs:
       run: |
         cd /D C:\hostedtoolcache\windows\Python\3.7.9\x64\
         del python.exe
-        where python
 
     - name: Display tool versions
       run: |
