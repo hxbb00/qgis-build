@@ -1,5 +1,5 @@
 @echo off
-path %OSGEO4W_ROOT%\apps\qt5\bin;%PATH%
+set PATH=%OSGEO4W_ROOT%\apps\qt5\bin;%PATH%
 
 set QT_PLUGIN_PATH=%OSGEO4W_ROOT%\apps\Qt5\plugins
 
