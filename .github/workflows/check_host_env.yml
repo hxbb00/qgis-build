@@ -28,4 +28,6 @@ jobs:
       - name: find python
         shell: cmd
         run: |
+          cd /D C:\hostedtoolcache\windows\Python\3.7.9\x64\
+          del python3.exe
           where python
