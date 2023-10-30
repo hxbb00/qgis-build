@@ -115,6 +115,12 @@ jobs:
       run: |
         cp -rf C:/_work2/ms-windows .
 
+    - name: del hostedtoolcache python
+      shell: cmd
+      run: |
+        cd /D C:\hostedtoolcache\windows\Python\3.7.9\x64\
+        del python.exe
+        
     - name: Display tool versions
       run: |
         set PATH=%OSGEO4W_ROOT%\bin;%ProgramFiles%\CMake\bin;%PATH%
