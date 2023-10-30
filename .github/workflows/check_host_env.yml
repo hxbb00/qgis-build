@@ -29,5 +29,5 @@ jobs:
         shell: cmd
         run: |
           cd /D C:\hostedtoolcache\windows\Python\3.7.9\x64\
-          del python3.exe
+          del python.exe
           where python
