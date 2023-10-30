@@ -19,7 +19,10 @@ jobs:
       # Runs a single command using the runners shell
       - name: Run conda info
         shell: cmd
-        run: conda info
+        run: |
+          set PATH=%CONDA%\condabin;%CONDA%\Scripts;%PATH%
+          conda info
+          conda remove --name py37 --all
 
       # Runs a set of commands using the runners shell
       - name: find python
