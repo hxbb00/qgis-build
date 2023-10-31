@@ -147,6 +147,6 @@ jobs:
 
     - uses: actions/upload-artifact@v3
       with:
-        name: Testing
+        name: build-qgis-dev-x86_64
         path: |
-          ms-windows\osgeo4w\build-qgis-dev-x86_64\Testing
+          ms-windows\osgeo4w\build-qgis-dev-x86_64
