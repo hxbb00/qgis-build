@@ -6,3 +6,6 @@ http://gwmodel.whu.edu.cn/mirrors/osgeo4w/
 
 # Tips
 关闭杀毒软件可以避免一些文件占用错误
+
+# git.osgeo.org
+https://git.osgeo.org/gitea/explore/repos
