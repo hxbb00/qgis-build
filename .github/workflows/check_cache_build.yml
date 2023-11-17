@@ -149,4 +149,4 @@ jobs:
       with:
         name: build-qgis-dev-x86_64
         path: |
-          ms-windows\osgeo4w\build-qgis-dev-x86_64
+          ms-windows\osgeo4w\build-qgis-dev-x86_64\Testing
