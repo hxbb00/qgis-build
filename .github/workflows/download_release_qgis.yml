@@ -22,7 +22,7 @@ jobs:
       
     steps:
     - name: Download qgis
-      run: curl --output c:/QGIS-OSGeo4W-3.34.7-2.msi https://download.qgis.org/downloads/QGIS-OSGeo4W-3.34.7-2.msi
+      run: curl --output c:/QGIS-OSGeo4W-3.34.7-2.msi https://download.osgeo.org/qgis/windows/QGIS-OSGeo4W-3.34.7-2.msi
       
     - name: set release date
       run: |
