@@ -4,6 +4,8 @@ http://gwmodel.whu.edu.cn/mirrors/osgeo4w/
 http://gwmodel.whu.edu.cn/mirrors/osgeo4w/v2/x86_64/release/qgis/qgis-ltr/setup.hint
 https://download.osgeo.org/osgeo4w/v2/x86_64/release/qgis/qgis-ltr/setup.hint
 
+http://gwmodel.whu.edu.cn/mirrors/osgeo4w/v2/x86_64/setup.ini
+
 # azure ci
 [![Build Status](https://dev.azure.com/qgis/QGIS/_apis/build/status/qgis.QGIS?branchName=master)](https://dev.azure.com/qgis/QGIS/_build/latest?definitionId=1&branchName=master)
 
