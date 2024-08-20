@@ -1,5 +1,10 @@
 name: OSGeo4W Windows Build
 
+spec:
+  inputs:
+    qgis_ref:
+      default: release-3_34
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
@@ -54,8 +59,8 @@ jobs:
         env:
           PKG: ${{ matrix.pkg }}
           GITHUB_EVENT_NUMBER: ${{ github.event.number }}
-          REF: ${{ github.ref }}
-          PKGDESC: "QGIS build of ${{ github.ref }}"
+          REF: $[[ inputs.qgis_ref ]]
+          PKGDESC: "QGIS build of $[[ inputs.qgis_ref ]]"
           OSGEO4W_BUILD_RDEPS: 0
           PATH: C:\WINDOWS\system32;C:\Windows
           CCACHE_DIR: ${{ github.workspace }}/ccache
