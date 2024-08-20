@@ -25,28 +25,7 @@ jobs:
       - name: Determine package names
         id: osgeo4w-packages
         run: |
-          RELBRANCH=$(git ls-remote --heads $REPO "refs/heads/release-*_*" | sed -e '/\^{}$/d' -ne 's#^.*refs/heads/release-#release-#p' | sort -V | tail -1)
-          LTRBRANCH=$(git ls-remote --tags $REPO | sed -e '/\^{}$/d' -ne 's#^.*refs/tags/ltr-#release-#p' | sort -V | fgrep -vx $RELBRANCH | tail -1)
-          if [ -n "$GITHUB_BASE_REF" ]; then
-            branch=$GITHUB_BASE_REF
-          else
-            branch=${GITHUB_REF##*/}
-          fi
-          case "$branch" in
-          $LTRBRANCH|queued_ltr_backports)
-            p=qgis-ltr-dev
-            ;;
-          $RELBRANCH)
-            p=qgis-rel-dev
-            ;;
-          master)
-            p="qgis-dev qgis-qt6-dev"
-            ;;
-          *)
-            echo "Could not determine package name"
-            exit 1
-            ;;
-          esac
+          p=qgis-ltr-dev
           echo "matrix={\"pkg\":[\"${p// /\",\"}\"]}">>$GITHUB_OUTPUT
           
   osgeo4w-build:
