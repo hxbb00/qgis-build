@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       qgis_ref:
-        description: 'QGIS Version Ref'
+        description: 'QGIS Branch'
         default: release-3_34
 
 permissions:
@@ -74,6 +74,6 @@ jobs:
       - id: upload
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.pkg }}
+          name: ${{ matrix.pkg }}-${{ inputs.qgis_ref }}
           path: x86_64/
           retention-days: 1
