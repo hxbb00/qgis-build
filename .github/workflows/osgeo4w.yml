@@ -28,7 +28,7 @@ jobs:
       - name: Determine package names
         id: osgeo4w-packages
         run: |
-          p=qgis-ltr-dev
+          p=qgis-ltr
           echo "matrix={\"pkg\":[\"${p// /\",\"}\"]}">>$GITHUB_OUTPUT
           
   osgeo4w-build:
@@ -76,4 +76,4 @@ jobs:
         with:
           name: ${{ matrix.pkg }}-${{ inputs.qgis_ref }}
           path: x86_64/
-          retention-days: 1
+          retention-days: 3
