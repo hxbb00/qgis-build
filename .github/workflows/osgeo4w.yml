@@ -12,7 +12,7 @@ on:
         default: release-3_34
       qgis_pkg:
         type: choice
-        description: pig type
+        description: pkg type
         options: 
         - qgis-ltr-dev
         - qgis-rel-dev
