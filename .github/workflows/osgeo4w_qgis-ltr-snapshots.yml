@@ -89,8 +89,8 @@ jobs:
 
     - name: pack cygwin & OSGeo4W64
       run: |
-        7z a win-cygwin-devel-x86_64-${{ env.RELEASE_QGIS_VERSION }}.zip c:\cygwin
-        7z a win-OSGeo4W64-devel-x86_64-${{ env.RELEASE_QGIS_VERSION }}.zip c:\OSGeo4W64
+        7z a build-cygwin-devel-x86_64-${{ env.RELEASE_QGIS_VERSION }}.zip c:\cygwin
+        7z a build-OSGeo4W64-devel-x86_64-${{ env.RELEASE_QGIS_VERSION }}.zip c:\OSGeo4W64
       
     - name: set release date
       run: |
