@@ -38,7 +38,7 @@ jobs:
       run: |
         curl --output ./qgis-ltr-setup.hint https://download.osgeo.org/osgeo4w/v2/snapshots/${{ github.event.inputs.snapshots }}/x86_64/release/qgis/qgis-ltr/setup.hint
 	echo "RELEASE_QGIS_VERSION=$(awk -F: '$1 ~ /curr/ {print $2}' ./qgis-ltr-setup.hint | awk '$1=$1')" >> ${GITHUB_ENV}
-	
+ 
     - name: Download cygwin Installer
       run: curl --output c:/setup-x86_64.exe https://cygwin.com/setup-x86_64.exe
 
