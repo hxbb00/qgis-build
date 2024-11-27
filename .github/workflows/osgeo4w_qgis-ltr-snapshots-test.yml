@@ -69,7 +69,7 @@ jobs:
       run: |
         echo "RELEASE_DATE=$(date +%Y%m%d-%H%M%s)" >> ${GITHUB_ENV}
         RELBRANCH=$(echo "${{ env.RELEASE_QGIS_VERSION }}" | awk -F- '{print $1}')
-        echo "https://github.com/qgis/QGIS/archive/refs/tags/final-$RELBRANCH.zip" > ${{ github.workspace }}-SRC.txt
+        echo "https://github.com/qgis/QGIS/archive/refs/tags/final-${RELBRANCH}.zip" > QGIS-SRC.txt
       shell: bash
 
     - name: Release cygwin
@@ -78,4 +78,4 @@ jobs:
         name: build-cygwin-devel-x86_64-${{ env.RELEASE_QGIS_VERSION }}
         tag_name: ${{ env.RELEASE_DATE }}
         files: build-cygwin-devel-x86_64-${{ env.RELEASE_QGIS_VERSION }}.zip
-        body_path: ${{ github.workspace }}-SRC.txt
+        body_path: QGIS-SRC.txt
