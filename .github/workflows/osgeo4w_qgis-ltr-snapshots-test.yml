@@ -1,4 +1,4 @@
-name: osgeo4w_qgis-ltr-snapshots
+name: get_cygwin
 
 on:
   workflow_dispatch:
@@ -53,44 +53,17 @@ jobs:
       run: ms-windows/osgeo4w/runasadmin.ps1 c:/setup-x86_64.exe -qnNdO -R C:/cygwin -s http://cygwin.mirror.constant.com -l C:/temp/cygwin -P "bison,git,flex,poppler,doxygen,unzip"
       shell: powershell
 
-    - name: Installing OSGeo4W V2
-      run: >
-        ms-windows/osgeo4w/runasadmin.ps1 c:/osgeo4w-setup.exe --autoaccept --advanced --arch $env:OSGEO4W_ARCH 
-        --quiet-mode --upgrade-also --root $env:OSGEO4W_ROOT --only-site 
-        -s https://download.osgeo.org/osgeo4w/v2/snapshots/${{ github.event.inputs.snapshots }}/ -l c:/temp/osgeo4w 
-        -P qgis-ltr -P qgis-ltr-pdb -P qgis-ltr-common -P qgis-ltr-deps -P qgis-ltr-devel -P qgis-ltr-grass-plugin -P qgis-ltr-src
-        -P python3-core -P qt5-devel -P python3-devel -P grass -P python3-pyqt5 -P python3-pyqt5-sip
-        -P qt5-libs -P zstd-devel -P pdal-libs -P pdal -P pdal-devel -P draco -P draco-devel -P proj-devel -P curl-devel
-        -P libtiff-devel -P qscintilla -P python3-qscintilla -P qscintilla-devel -P gdal-devel
-      shell: powershell
-
     - name: Clear package caches
       run: |
         rmdir /s /q c:\temp\cygwin
-        rmdir /s /q c:\temp\osgeo4w
       shell: cmd
 
     - name: Extracting Ninja
       run: c:/cygwin/bin/unzip -o c:/ninja.zip -d $env:OSGEO4W_ROOT/bin
 
-    - name: Display tool versions
-      run: |
-        set PATH=%OSGEO4W_ROOT%\bin;%ProgramFiles%\CMake\bin;%PATH%
-        dir . /a
-        dir c:\ /a
-        dir c:\OSGeo4W64 /a
-        dir c:\OSGeo4W64\bin /a
-        dir c:\OSGeo4W64\apps /a
-        dir c:\OSGeo4W64\etc\ini /a
-        cmake --version
-        ctest --version
-        ninja --version
-      shell: cmd
-
     - name: pack cygwin & OSGeo4W64
       run: |
         7z a build-cygwin-devel-x86_64-${{ env.RELEASE_QGIS_VERSION }}.zip c:\cygwin
-        7z a build-OSGeo4W64-devel-x86_64-${{ env.RELEASE_QGIS_VERSION }}.zip c:\OSGeo4W64
       
     - name: set release date
       run: |
@@ -105,11 +78,4 @@ jobs:
         name: build-cygwin-devel-x86_64-${{ env.RELEASE_QGIS_VERSION }}
         tag_name: ${{ env.RELEASE_DATE }}
         files: build-cygwin-devel-x86_64-${{ env.RELEASE_QGIS_VERSION }}.zip
-        
-    - name: Release OSGeo4W64
-      uses: softprops/action-gh-release@v2
-      with:
-        name: build-OSGeo4W64-devel-x86_64-${{ env.RELEASE_QGIS_VERSION }}
-        tag_name: ${{ env.RELEASE_DATE }}
-        files: build-OSGeo4W64-devel-x86_64-${{ env.RELEASE_QGIS_VERSION }}.zip
         body_path: ${{ github.workspace }}-SRC.txt
