@@ -20,3 +20,7 @@ Each time the repository is updated the previous version of the setup.ini is kep
 
 # osgeo4w 源码
 https://github.com/hxbb00/OSGeo4W/blob/master/src/setup/CMakeLists.txt
+
+# 查看当前程序对应的源码
+![image](https://github.com/user-attachments/assets/f4253269-797e-4bc7-bb50-1e63ca1ae5cb)
+
