@@ -33,6 +33,7 @@ jobs:
       run: |
         mkdir C:\cygwin
         mkdir C:\OSGeo4W64
+        copy fix_*.sh C:\OSGeo4W64
 
     - name: Get QGIS Version
       run: |
