@@ -3,6 +3,7 @@ http://gwmodel.whu.edu.cn/mirrors/osgeo4w/
 
 http://gwmodel.whu.edu.cn/mirrors/osgeo4w/v2/x86_64/release/qgis/qgis-ltr/setup.hint
 
+https://ftp.osuosl.org/pub/osgeo/download/osgeo4w/v2/x86_64/release/
 https://download.osgeo.org/osgeo4w/v2/x86_64/release/qgis/qgis-ltr/setup.hint
 
 http://gwmodel.whu.edu.cn/mirrors/osgeo4w/v2/x86_64/setup.ini
