@@ -11,6 +11,16 @@ http://gwmodel.whu.edu.cn/mirrors/osgeo4w/v2/x86_64/setup.ini
 # Tips
 关闭杀毒软件可以避免一些文件占用错误
 
+# Code style
+
+Code style is done with [pre-commit](https://pre-commit.com).
+
+```
+pip install pre-commit
+# install pre-commit hook
+pre-commit install
+```
+
 # git.osgeo.org
 https://git.osgeo.org/gitea/explore/repos
 
