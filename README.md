@@ -8,6 +8,9 @@ https://download.osgeo.org/osgeo4w/v2/x86_64/release/qgis/qgis-ltr/setup.hint
 
 http://gwmodel.whu.edu.cn/mirrors/osgeo4w/v2/x86_64/setup.ini
 
+# debian/libqgis-dev.install.in
+https://packages.debian.org/sid/libqgis-dev
+
 # Tips
 关闭杀毒软件可以避免一些文件占用错误
 
