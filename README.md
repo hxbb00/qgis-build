@@ -14,6 +14,9 @@ https://packages.debian.org/sid/libqgis-dev
 # Tips
 关闭杀毒软件可以避免一些文件占用错误
 
+# 在线安装
+https://mirrors.tuna.tsinghua.edu.cn/qt/archive/online_installers/
+
 # Code style
 
 Code style is done with [pre-commit](https://pre-commit.com).
