@@ -1,0 +1,91 @@
+name: osgeo4w-qgis-cache-deps
+
+on:
+  workflow_dispatch:
+
+env:
+  LTR: release-dev
+  
+jobs:
+  OSGeo4W:
+    strategy:
+      max-parallel: 4
+    runs-on: windows-2019
+    timeout-minutes: 360
+    
+    env:
+      OSGEO4W_ROOT: C:\OSGeo4W64
+      OSGEO4W_ARCH: x86_64
+      CLCACHE_DIR: c:\clcache-x86_64
+      PLATFORM: x64
+      
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+
+    - name: Set up the working directory
+      run: |
+        mkdir C:\cygwin
+        mkdir C:\OSGeo4W64
+
+    - name: Download cygwin Installer
+      run: curl --output c:/setup-x86_64.exe https://cygwin.com/setup-x86_64.exe
+
+    - name: Download OSGeo4W V2 Installer
+      run: curl --output c:/osgeo4w-setup.exe http://ftp.osuosl.org/pub/osgeo/download/osgeo4w/osgeo4w-setup-v2.exe
+      
+    - name: Download Ninja
+      run: curl --location-trusted --output c:/ninja.zip https://github.com/ninja-build/ninja/releases/download/v1.9.0/ninja-win.zip
+
+    - name: Installing cygwin
+      run: ms-windows/osgeo4w/runasadmin.ps1 c:/setup-x86_64.exe -qnNdO -R C:/cygwin -s http://cygwin.mirror.constant.com -l C:/temp/cygwin -P "bison,git,flex,poppler,doxygen,unzip"
+      shell: powershell
+
+    - name: Installing OSGeo4W V2
+      run: >
+        ms-windows/osgeo4w/runasadmin.ps1 c:/osgeo4w-setup.exe --autoaccept --advanced --arch $env:OSGEO4W_ARCH 
+        --quiet-mode --upgrade-also --root $env:OSGEO4W_ROOT --only-site --safe --no-shortcuts 
+        -s http://download.osgeo.org/osgeo4w/v2 -l c:/temp/osgeo4w 
+        -P expat-devel -P fcgi-devel -P proj-devel -P gdal-dev-devel -P qt5-oci -P sqlite3-devel -P geos-devel 
+	-P gsl-devel -P libiconv-devel -P libzip-devel -P libspatialindex-devel -P python3-pip -P python3-pyqt5 
+	-P python3-sip -P python3-pyqt-builder -P python3-devel -P python3-qscintilla -P python3-nose2 
+	-P python3-future -P python3-pyyaml -P python3-mock -P python3-six -P qca-devel -P qscintilla-devel 
+	-P qt5-devel -P qwt-devel -P libspatialite-devel -P oci-devel -P qtkeychain-devel -P zlib-devel 
+	-P opencl-devel -P exiv2-devel -P protobuf-devel -P python3-setuptools -P zstd-devel -P qtwebkit-devel 
+	-P libpq-devel -P libxml2-devel -P hdf5-devel -P hdf5-tools -P netcdf-devel -P pdal -P pdal-devel 
+	-P grass -P draco-devel -P libtiff-devel -P transifex-cli -P python3-oauthlib
+      shell: powershell
+
+    - name: Extracting Ninja
+      run: c:/cygwin/bin/unzip -o c:/ninja.zip -d $env:OSGEO4W_ROOT/bin
+
+    - name: pack cygwin & OSGeo4W64
+      run: |
+        7z a sdk-cygwin-devel-x86_64.zip c:\cygwin
+	7z a temp-cygwin-devel-x86_64.zip c:\temp\cygwin
+        7z a sdk-OSGeo4W64-devel-x86_64.zip c:\OSGeo4W64
+	7z a temp-OSGeo4W64-devel-x86_64.zip c:\temp\osgeo4w
+      
+    - name: set release date
+      run: |
+        echo "RELEASE_DATE=$(date +%Y%m%d-%H%M%s)" >> ${GITHUB_ENV}
+      shell: bash
+
+    - name: Release cygwin
+      uses: softprops/action-gh-release@v2
+      with:
+        name: sdk-cygwin-devel-x86_64
+        tag_name: ${{ env.RELEASE_DATE }}
+        files: |
+	  sdk-cygwin-devel-x86_64.zip
+	  temp-cygwin-devel-x86_64.zip
+        
+    - name: Release OSGeo4W64
+      uses: softprops/action-gh-release@v2
+      with:
+        name: sdk-OSGeo4W64-devel-x86_64
+        tag_name: ${{ env.RELEASE_DATE }}
+        files: |
+	  sdk-OSGeo4W64-devel-x86_64.zip
+	  temp-OSGeo4W64-devel-x86_64.zip
+                    
