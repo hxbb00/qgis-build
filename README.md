@@ -1,3 +1,5 @@
+# download
+https://download.osgeo.org/qgis/win64/
 # qgis-build
 http://gwmodel.whu.edu.cn/mirrors/osgeo4w/
 
