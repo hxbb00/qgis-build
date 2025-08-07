@@ -41,7 +41,7 @@ jobs:
   osgeo4w-build:
     name: OSGeo4W Windows Build
     needs: osgeo4w-packages
-    runs-on: windows-latest
+    runs-on: Windows-2022
     env:
       O4W_REPO: jef-n/OSGeo4W
 
