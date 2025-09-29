@@ -1,0 +1,60 @@
+    name: Download QGIS Artifact and Release
+
+    on:
+      workflow_dispatch:
+        inputs:
+          artifactName:
+            description: 'Name of the artifact to download'
+            required: true
+            type: string
+          workflowRunId:
+            description: 'ID of the workflow run that generated the artifact'
+            required: true
+            type: number
+          releaseTag:
+            description: 'Tag name for the release'
+            required: true
+            type: string
+          releaseTitle:
+            description: 'Title for the release'
+            required: true
+            type: string
+          releaseBody:
+            description: 'Description for the release'
+            default: 'Automatically created release'
+            type: string
+
+    jobs:
+      release:
+        runs-on: ubuntu-latest
+        steps:
+
+          - name: Download artifact
+            uses: actions/download-artifact@v4
+            with:
+              name: ${{ github.event.inputs.artifactName }}
+	      github-token: ${{ secrets.GH_PAT }} # token with actions:read permissions on target repo
+	      repository: qgis/QGIS
+              run-id: ${{ github.event.inputs.workflowRunId }}
+              path: artifacts  # 下载到artifacts目录
+
+          - name: List downloaded files
+            run: |
+              echo "Downloaded files:"
+              ls -la artifacts/
+              # 检查是否成功下载
+              if [ -z "$(ls -A artifacts/)" ]; then
+                echo "Error: No files found in artifact"
+                exit 1
+              fi
+
+          - name: Create Release
+            uses: softprops/action-gh-release@v2
+            with:
+              tag_name: ${{ github.event.inputs.releaseTag }}
+              name: ${{ github.event.inputs.releaseTitle }}
+              body: ${{ github.event.inputs.releaseBody }}
+              files: artifacts/**/*  # 上传artifacts目录下的所有文件
+            env:
+              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
