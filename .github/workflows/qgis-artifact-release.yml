@@ -10,7 +10,7 @@
           workflowRunId:
             description: 'ID of the workflow run that generated the artifact'
             required: true
-            type: number
+            type: string
           releaseTag:
             description: 'Tag name for the release'
             required: true
@@ -33,10 +33,10 @@
             uses: actions/download-artifact@v4
             with:
               name: ${{ github.event.inputs.artifactName }}
-	      github-token: ${{ secrets.GH_PAT }} # token with actions:read permissions on target repo
-	      repository: qgis/QGIS
+              github-token: ${{ secrets.GH_PAT }}
+              repository: qgis/QGIS
               run-id: ${{ github.event.inputs.workflowRunId }}
-              path: artifacts  # 下载到artifacts目录
+              path: artifacts
 
           - name: List downloaded files
             run: |
