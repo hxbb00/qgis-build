@@ -3,25 +3,13 @@
     on:
       workflow_dispatch:
         inputs:
-          artifactName:
-            description: 'Name of the artifact to download'
-            required: true
-            type: string
           workflowRunId:
             description: 'ID of the workflow run that generated the artifact'
             required: true
             type: string
-          releaseTag:
-            description: 'Tag name for the release'
+          artifactName:
+            description: 'Name of the artifact to download'
             required: true
-            type: string
-          releaseTitle:
-            description: 'Title for the release'
-            required: true
-            type: string
-          releaseBody:
-            description: 'Description for the release'
-            default: 'Automatically created release'
             type: string
 
     jobs:
@@ -51,9 +39,9 @@
           - name: Create Release
             uses: softprops/action-gh-release@v2
             with:
-              tag_name: ${{ github.event.inputs.releaseTag }}
-              name: ${{ github.event.inputs.releaseTitle }}
-              body: ${{ github.event.inputs.releaseBody }}
+              tag_name: ${{ github.event.inputs.artifactName }}-${{ github.event.inputs.workflowRunId }}
+              name: ${{ github.event.inputs.artifactName }}-${{ github.event.inputs.workflowRunId }}
+              body: https://github.com/qgis/QGIS/actions/runs/${{ github.event.inputs.workflowRunId }}
               files: artifacts/**/*  # 上传artifacts目录下的所有文件
             env:
               GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
