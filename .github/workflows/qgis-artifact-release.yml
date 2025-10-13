@@ -34,7 +34,7 @@
             with:
               github_token: ${{ secrets.GITHUB_TOKEN }}
               name: ${{ github.event.inputs.artifactName }}
-              repository: qgis/QGIS
+              repo: qgis/QGIS
               run_id: ${{ github.event.inputs.workflowRunId }}
               path: artifacts
 
