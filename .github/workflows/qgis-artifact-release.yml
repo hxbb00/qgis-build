@@ -3,8 +3,8 @@
     on:
       workflow_dispatch:
         inputs:
-          artifactId:
-            description: 'ID of the artifact to download'
+          artifactName:
+            description: 'Name of the artifact to download'
             required: true
             type: string
           workflowRunId:
@@ -30,12 +30,12 @@
         steps:
 
           - name: Download artifact
-            uses: actions/download-artifact@v5
+            uses: dawidd6/action-download-artifact@v11
             with:
-              artifact-ids: ${{ github.event.inputs.artifactId }}
-              github-token: ${{ secrets.GH_PAT }}
+              github_token: ${{ secrets.GITHUB_TOKEN }}
+              name: ${{ github.event.inputs.artifactName }}
               repository: qgis/QGIS
-              run-id: ${{ github.event.inputs.workflowRunId }}
+              run_id: ${{ github.event.inputs.workflowRunId }}
               path: artifacts
 
           - name: List downloaded files
@@ -57,4 +57,4 @@
               files: artifacts/**/*  # 上传artifacts目录下的所有文件
             env:
               GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    
+
