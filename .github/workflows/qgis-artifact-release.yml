@@ -11,6 +11,10 @@
             description: 'Name of the artifact to download'
             required: true
             type: string
+          tagName:
+            description: 'Tag of the artifact to download'
+            required: true
+            type: string
 
     jobs:
       release:
@@ -39,7 +43,7 @@
           - name: Create Release
             uses: softprops/action-gh-release@v2
             with:
-              tag_name: ${{ github.event.inputs.artifactName }}-${{ github.event.inputs.workflowRunId }}
+              tag_name: ${{ github.event.inputs.tagName }}-${{ github.event.inputs.workflowRunId }}
               name: ${{ github.event.inputs.artifactName }}-${{ github.event.inputs.workflowRunId }}
               body: https://github.com/qgis/QGIS/actions/runs/${{ github.event.inputs.workflowRunId }}
               files: artifacts/**/*  # 上传artifacts目录下的所有文件
