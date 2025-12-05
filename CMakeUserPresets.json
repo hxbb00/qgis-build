@@ -1,0 +1,91 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "Qt-Debug",
+      "inherits": "Qt-Default",
+      "binaryDir": "${sourceDir}/build/debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "CMAKE_CXX_FLAGS": "-DQT_QML_DEBUG",
+        "BUILD_WITH_QT6": "OFF",
+        "WITH_QTWEBENGINE": "OFF",
+        "ENABLE_TESTS": "OFF",
+        "CMAKE_PREFIX_PATH": "$env{OSGeo4WDIR};$env{OSGeo4WDIR}/cmake;$env{OSGeo4WDIR}/apps/Qt5/cmake",
+        "CMAKE_INCLUDE_PATH": "$env{OSGeo4WDIR}/include;$env{OSGeo4WDIR}/apps/Qt5/include",
+        "CMAKE_LIBRARY_PATH": "$env{OSGeo4WDIR}/lib;$env{OSGeo4WDIR}/apps/Qt5/lib"
+      },
+      "environment": {
+        "OSGeo4WDIR": "d:/OSGeo4W",
+        "cygwinDIR": "d:/cygwin",
+        "VCPKGDIR": "d:/vcpkg",
+        "GRASS_PREFIX8": "$env{OSGeo4WDIR}/apps/grass/grass83",
+        "QT_QPA_PLATFORM_PLUGIN_PATH": "$env{OSGeo4WDIR}/apps/Qt5/plugins/platforms",
+        "PYTHONHOME": "$env{OSGeo4WDIR}/apps/Python312",
+        "QML_DEBUG_ARGS": "-qmljsdebugger=file:{d6b7ce06-2a3d-46ce-872d-e735e4755fa5},block",
+        "PATH": "$env{OSGeo4WDIR};$env{OSGeo4WDIR}/cmake;$env{OSGeo4WDIR}/bin;$env{OSGeo4WDIR}/apps/Qt5/bin;$env{OSGeo4WDIR}/apps/gdal-dev/bin;$env{OSGeo4WDIR}/apps/grass/grass83/bin;$env{OSGeo4WDIR}/apps/grass/grass83/lib;$env{OSGeo4WDIR}/apps/Python312/Scripts;$env{cygwinDIR}/bin;$penv{PATH}",
+        "LIB_DIR": "$env{OSGeo4WDIR}",
+        "PKG_CONFIG_PATH": "$env{OSGeo4WDIR}/lib/pkgconfig;$penv{PKG_CONFIG_PATH}"
+      }
+    },
+    {
+      "name": "Qt-Release",
+      "inherits": "Qt-Default",
+      "binaryDir": "${sourceDir}/build/release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "hidden": true,
+      "name": "Qt-Default",
+      "inherits": "OSGeo4W_Qt5_13_12",
+      "vendor": {
+        "qt-project.org/Default": {
+          "checksum": "SfG3NTwgmzfDaUBHGaDvdAas9M8="
+        }
+      }
+    },
+    {
+      "hidden": true,
+      "name": "OSGeo4W_Qt5_13_12",
+      "inherits": "Qt",
+      "environment": {
+        "QTDIR": "D:/OSGeo4W/apps/Qt5"
+      },
+      "architecture": {
+        "strategy": "external",
+        "value": "x64"
+      },
+      "generator": "Ninja",
+      "vendor": {
+        "qt-project.org/Version": {
+          "checksum": "zAe2rFsz2L6nVcJZxvXex282p3s="
+        }
+      }
+    },
+    {
+      "hidden": true,
+      "name": "qgis_3_34_13",
+      "inherits": "Qt",
+      "environment": {
+        "QTDIR": "D:/qgis_3_34_13/OSGeo4W64/apps/Qt5"
+      },
+      "architecture": {
+        "strategy": "external",
+        "value": "x64"
+      },
+      "generator": "Ninja",
+      "vendor": {
+        "qt-project.org/Version": {
+          "checksum": "0+KcI3Iv/kf0PFIC2wfKHljDSls="
+        }
+      }
+    }
+  ],
+  "vendor": {
+    "qt-project.org/Presets": {
+      "checksum": "pKBinFFKrcK8nndCMjLRucPplAc="
+    }
+  }
+}
