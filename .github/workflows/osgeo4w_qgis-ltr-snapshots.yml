@@ -7,7 +7,8 @@ on:
         description: 'snapshots to build'
         required: true
         default: '20241127-081725'
-
+permissions:
+  contents: write
 env:
   LTR: release-3_34
   
