@@ -42,6 +42,8 @@ libpng16.dll
 libssl-3-x64.dll
 zlib.dll
 zstd.dll
+brotlicommon.dll
+brotlidec.dll
 EOF
 )
 
