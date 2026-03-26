@@ -10,7 +10,7 @@ jobs:
   OSGeo4W:
     strategy:
       max-parallel: 4
-    runs-on: windows-2019
+    runs-on: windows-latest
     timeout-minutes: 360
     
     env:
