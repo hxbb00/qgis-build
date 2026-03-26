@@ -1,4 +1,4 @@
-name: osgeo4w-qgis-cache-deps
+name: get-osgeo4w-qgis-dev-deps
 
 on:
   workflow_dispatch:
@@ -46,13 +46,7 @@ jobs:
         ms-windows/osgeo4w/runasadmin.ps1 c:/osgeo4w-setup.exe --autoaccept --advanced --arch $env:OSGEO4W_ARCH 
         --quiet-mode --upgrade-also --root $env:OSGEO4W_ROOT --only-site --safe --no-shortcuts 
         -s http://download.osgeo.org/osgeo4w/v2 -l c:/temp/osgeo4w 
-        -P expat-devel -P fcgi-devel -P proj-devel -P gdal-dev-devel -P qt5-oci -P sqlite3-devel -P geos-devel 
-        -P gsl-devel -P libiconv-devel -P libzip-devel -P libspatialindex-devel -P python3-pip -P python3-pyqt5 
-        -P python3-sip -P python3-pyqt-builder -P python3-devel -P python3-qscintilla -P python3-nose2 -P python3-future 
-        -P python3-pyyaml -P python3-mock -P python3-six -P python3-jinja2 -P python3-owslib -P qca-devel -P qscintilla-devel 
-        -P qt5-devel -P qwt-devel -P libspatialite-devel -P oci-devel -P qtkeychain-devel -P zlib-devel -P opencl-devel 
-        -P exiv2-devel -P protobuf-devel -P python3-setuptools -P zstd-devel -P qtwebkit-devel -P libpq-devel -P libxml2-devel 
-        -P hdf5-devel -P hdf5-tools -P netcdf-devel -P pdal -P pdal-devel -P grass -P draco-devel -P libtiff-devel -P transifex-cli -P python3-oauthlib
+        -P qgis-dev-deps
       shell: powershell
 
     - name: Extracting Ninja
@@ -61,9 +55,7 @@ jobs:
     - name: pack cygwin & OSGeo4W64
       run: |
         7z a sdk-cygwin-devel-x86_64.zip c:\cygwin
-        7z a temp-cygwin-devel-x86_64.zip c:\temp\cygwin
-        7z a sdk-OSGeo4W64-devel-x86_64.zip c:\OSGeo4W64
-        7z a temp-OSGeo4W64-devel-x86_64.zip c:\temp\osgeo4w
+        7z a sdk-OSGeo4W64-qgis-dev-deps-x86_64.zip c:\OSGeo4W64
       
     - name: set release date
       run: |
@@ -74,17 +66,15 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         name: sdk-cygwin-devel-x86_64
-        tag_name: ${{ env.RELEASE_DATE }}
+        tag_name: sdk-cygwin-${{ env.RELEASE_DATE }}
         files: |
           sdk-cygwin-devel-x86_64.zip
-          temp-cygwin-devel-x86_64.zip
         
     - name: Release OSGeo4W64
       uses: softprops/action-gh-release@v2
       with:
         name: sdk-OSGeo4W64-devel-x86_64
-        tag_name: ${{ env.RELEASE_DATE }}
+        tag_name: qgis-dev-deps-${{ env.RELEASE_DATE }}
         files: |
-          sdk-OSGeo4W64-devel-x86_64.zip
-          temp-OSGeo4W64-devel-x86_64.zip
+          sdk-OSGeo4W64-qgis-dev-deps-x86_64.zip
                     
