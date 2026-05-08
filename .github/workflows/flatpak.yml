@@ -22,9 +22,10 @@
               sudo flatpak install -y flathub app/org.qgis.qgis/x86_64/lts
               sudo flatpak info org.qgis.qgis
               sudo flatpak info org.qgis.qgis --show-runtime
-              sudo ll /var/lib/flatpak/app/org.qgis.qgis/
-              sudo ll /var/lib/flatpak/runtime/
-              sudo ll ~/.local/share/flatpak/app/org.qgis.qgis/
-              sudo ll ~/.var/app/org.qgis.qgis/
-              sudo ll /var/lib/flatpak/exports/share/applications/
-              sudo ll ~/.local/share/flatpak/exports/share/applications/
+              sudo ls -l /var/lib/flatpak/app/org.qgis.qgis/ 2>/dev/null || echo "not exists"
+              sudo ls -l /var/lib/flatpak/runtime/ 2>/dev/null || echo "not exists"
+              sudo ls -l /var/lib/flatpak/exports/share/applications/ 2>/dev/null || echo "not exists"              
+              echo "ls home:"
+              sudo ls -l ~/.local/share/flatpak/app/org.qgis.qgis/ 2>/dev/null || echo "not exists"
+              sudo ls -l ~/.var/app/org.qgis.qgis/ 2>/dev/null || echo "not exists"
+              sudo ls -l ~/.local/share/flatpak/exports/share/applications/ 2>/dev/null || echo "not exists"
