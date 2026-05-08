@@ -22,7 +22,7 @@ jobs:
       - name: install flatpak QGIS
         run: |
           echo "install QGIS:"
-          sudo flatpak install -y flathub app/org.qgis.qgis/x86_64/lts
+          sudo flatpak install -y flathub app/org.qgis.qgis/x86_64/stable
           sudo flatpak info org.qgis.qgis
           sudo flatpak info org.qgis.qgis --show-runtime
           sudo ls -l /var/lib/flatpak/app/org.qgis.qgis/ 2>/dev/null || echo "not exists"
@@ -36,7 +36,8 @@ jobs:
 
       - name: pack flatpak app
         run: |
-          zip -r flatpak-qgis.zip /var/lib/flatpak/app/org.qgis.qgis
+          zip -r flatpak-qgis-app.zip /var/lib/flatpak/app/org.qgis.qgis/current
+          zip -r flatpak-qgis-rt.zip /var/lib/flatpak/runtime
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
@@ -44,6 +45,8 @@ jobs:
           tag_name: flatpak-qgis-${{ env.RELEASE_DATE }}
           name: flatpak-qgis-${{ env.RELEASE_DATE }}
           body: https://qgis.org/resources/installation-guide/#flatpak
-          files: flatpak-qgis.zip
+          files: |
+            flatpak-qgis-app.zip
+            flatpak-qgis-rt.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
