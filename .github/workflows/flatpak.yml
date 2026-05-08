@@ -26,9 +26,13 @@ jobs:
           cd bin
           chmod +x flatpak2appdir strace-file appimagetool
 
-      - name: Export QGIS to AppDir
+      - name: Fix dconf permission & Export QGIS to AppDir
         run: |
-          ./bin/flatpak2appdir org.qgis.qgis
+          # 修复 dconf 权限拒绝
+          sudo mkdir -p /run/user/1001/dconf
+          sudo chmod -R 777 /run/user/1001
+          # 用 sudo 运行避免权限、目录缺失
+          sudo ./bin/flatpak2appdir org.qgis.qgis
           ls -la org.qgis.qgis.AppDir/
 
       - name: Set release date
