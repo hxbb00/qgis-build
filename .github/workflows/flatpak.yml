@@ -10,41 +10,46 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-
-      - name: install flatpak
+      - name: Install dependencies
         run: |
-          echo "install flatpak:"
           sudo apt update
-          sudo apt install flatpak zip
-          sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-          sudo flatpak --version
+          sudo apt install -y flatpak zip git python3-pip
+          # 安装 flatpak2appdir
+          pip3 install flatpak2appdir
+          flatpak2appdir --version
 
-      - name: install flatpak QGIS
+      - name: Add flathub remote
         run: |
-          echo "install QGIS:"
+          sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+
+      - name: Install QGIS flatpak
+        run: |
           sudo flatpak install -y flathub app/org.qgis.qgis/x86_64/stable
-          sudo flatpak info org.qgis.qgis
-          sudo flatpak info org.qgis.qgis --show-runtime
-          sudo ls -l /var/lib/flatpak/app/org.qgis.qgis/ 2>/dev/null || echo "not exists"
-          sudo ls -l /var/lib/flatpak/runtime/ 2>/dev/null || echo "not exists"
-          sudo ls -l /var/lib/flatpak/exports/share/applications/ 2>/dev/null || echo "not exists"
+          sudo flatpak list | grep qgis
+
+      - name: Export to AppDir with flatpak2appdir
+        run: |
+          # 导出为标准 AppDir
+          flatpak2appdir org.qgis.qgis --output QGIS.AppDir
+          ls -la QGIS.AppDir/
 
       - name: set release date
         run: |
-          echo "RELEASE_DATE=$(date +%Y%m%d-%H%M%s)" >> ${GITHUB_ENV}
-        shell: bash
+          echo "RELEASE_DATE=$(date +%Y%m%d-%H%M%S)" >> ${GITHUB_ENV}
 
-      - name: pack flatpak app
+      - name: Pack AppDir to zip
         run: |
-          zip -r -y flatpak-qgis-app.zip /var/lib/flatpak/app/org.qgis.qgis/current
+          zip -r -y QGIS-AppDir-${{ env.RELEASE_DATE }}.zip QGIS.AppDir
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: flatpak-qgis-${{ env.RELEASE_DATE }}
-          name: flatpak-qgis-${{ env.RELEASE_DATE }}
-          body: https://qgis.org/resources/installation-guide/#flatpak
+          tag_name: flatpak-qgis-appdir-${{ env.RELEASE_DATE }}
+          name: flatpak-qgis-appdir-${{ env.RELEASE_DATE }}
+          body: |
+            QGIS Flatpak 导出标准 AppDir 离线包
+            https://qgis.org/resources/installation-guide/#flatpak
           files: |
-            flatpak-qgis-app.zip
+            QGIS-AppDir-${{ env.RELEASE_DATE }}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
