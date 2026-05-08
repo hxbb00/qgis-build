@@ -1,0 +1,30 @@
+    name: Download QGIS By Flatpak
+
+    on:
+      workflow_dispatch:
+
+    jobs:
+      release:
+        runs-on: ubuntu-latest
+        steps:
+
+          - name: install flatpak
+            run: |
+              echo "install flatpak:"
+              sudo apt update
+              sudo apt install flatpak
+              sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+              flatpak --version
+
+          - name: install flatpak QGIS
+            run: |
+              echo "install QGIS:"
+              flatpak install flathub org.qgis.qgis
+              flatpak info org.qgis.qgis
+              flatpak info org.qgis.qgis --show-runtime
+              ll /var/lib/flatpak/app/org.qgis.qgis/
+              ll /var/lib/flatpak/runtime/
+              ll ~/.local/share/flatpak/app/org.qgis.qgis/
+              ll ~/.var/app/org.qgis.qgis/
+              ll /var/lib/flatpak/exports/share/applications/
+              ll ~/.local/share/flatpak/exports/share/applications/
