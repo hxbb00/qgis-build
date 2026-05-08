@@ -37,7 +37,7 @@ jobs:
       - name: pack flatpak app
         run: |
           zip -r flatpak-qgis-app.zip /var/lib/flatpak/app/org.qgis.qgis/current
-          zip -r flatpak-qgis-rt.zip /var/lib/flatpak/runtime
+          zip -r flatpak-qgis-rt.zip /var/lib/flatpak/runtime/org.kde.Platform
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
