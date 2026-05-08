@@ -1,4 +1,4 @@
-name: Download QGIS By Flatpak
+name: Download Flatpak QGIS runtime
 
 on:
   workflow_dispatch:
@@ -36,15 +36,15 @@ jobs:
 
       - name: pack flatpak app
         run: |
-          zip -r -y flatpak-qgis-app.zip /var/lib/flatpak/app/org.qgis.qgis/current
+          zip -r -y flatpak-qgis-rt.zip /var/lib/flatpak/runtime/org.kde.Platform
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: flatpak-qgis-${{ env.RELEASE_DATE }}
-          name: flatpak-qgis-${{ env.RELEASE_DATE }}
+          tag_name: flatpak-qgisrt-${{ env.RELEASE_DATE }}
+          name: flatpak-qgisrt-${{ env.RELEASE_DATE }}
           body: https://qgis.org/resources/installation-guide/#flatpak
           files: |
-            flatpak-qgis-app.zip
+            flatpak-qgis-rt.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
