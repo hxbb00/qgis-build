@@ -1,31 +1,45 @@
-    name: Download QGIS By Flatpak
+name: Download QGIS By Flatpak
 
-    on:
-      workflow_dispatch:
+on:
+  workflow_dispatch:
 
-    jobs:
-      release:
-        runs-on: ubuntu-latest
-        steps:
+permissions:
+  contents: write
 
-          - name: install flatpak
-            run: |
-              echo "install flatpak:"
-              sudo apt update
-              sudo apt install flatpak
-              sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-              sudo flatpak --version
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
 
-          - name: install flatpak QGIS
-            run: |
-              echo "install QGIS:"
-              sudo flatpak install -y flathub app/org.qgis.qgis/x86_64/lts
-              sudo flatpak info org.qgis.qgis
-              sudo flatpak info org.qgis.qgis --show-runtime
-              sudo ls -l /var/lib/flatpak/app/org.qgis.qgis/ 2>/dev/null || echo "not exists"
-              sudo ls -l /var/lib/flatpak/runtime/ 2>/dev/null || echo "not exists"
-              sudo ls -l /var/lib/flatpak/exports/share/applications/ 2>/dev/null || echo "not exists"              
-              echo "ls home:"
-              sudo ls -l ~/.local/share/flatpak/app/org.qgis.qgis/ 2>/dev/null || echo "not exists"
-              sudo ls -l ~/.var/app/org.qgis.qgis/ 2>/dev/null || echo "not exists"
-              sudo ls -l ~/.local/share/flatpak/exports/share/applications/ 2>/dev/null || echo "not exists"
+      - name: install flatpak
+        run: |
+          echo "install flatpak:"
+          sudo apt update
+          sudo apt install flatpak
+          sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+          sudo flatpak --version
+
+      - name: install flatpak QGIS
+        run: |
+          echo "install QGIS:"
+          sudo flatpak install -y flathub app/org.qgis.qgis/x86_64/lts
+          sudo flatpak info org.qgis.qgis
+          sudo flatpak info org.qgis.qgis --show-runtime
+          sudo ls -l /var/lib/flatpak/app/org.qgis.qgis/ 2>/dev/null || echo "not exists"
+          sudo ls -l /var/lib/flatpak/runtime/ 2>/dev/null || echo "not exists"
+          sudo ls -l /var/lib/flatpak/exports/share/applications/ 2>/dev/null || echo "not exists"
+
+      - name: set release date
+        run: |
+          echo "RELEASE_DATE=$(date +%Y%m%d-%H%M%s)" >> ${GITHUB_ENV}
+        shell: bash
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: flatpak-qgis-${{ env.RELEASE_DATE }}
+          name: flatpak-qgis-${{ env.RELEASE_DATE }}
+          body: https://qgis.org/resources/installation-guide/#flatpak
+          files: /var/lib/flatpak/app/org.qgis.qgis/**/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
