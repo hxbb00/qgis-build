@@ -22,7 +22,7 @@ jobs:
 
       - name: Clone flatpak2appdir & grant execute
         run: |
-          git clone https://github.com/sudo-give-me-coffee/flatpak2appdir.git bin
+          git clone https://github.com/hxbb00/flatpak2appdir.git bin
           cd bin
           chmod +x flatpak2appdir strace-file appimagetool
 
