@@ -15,7 +15,7 @@ jobs:
         run: |
           echo "install flatpak:"
           sudo apt update
-          sudo apt install flatpak
+          sudo apt install flatpak zip
           sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
           sudo flatpak --version
 
@@ -34,12 +34,16 @@ jobs:
           echo "RELEASE_DATE=$(date +%Y%m%d-%H%M%s)" >> ${GITHUB_ENV}
         shell: bash
 
+      - name: pack flatpak app
+        run: |
+          zip -r flatpak-qgis.zip /var/lib/flatpak/app/org.qgis.qgis
+
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: flatpak-qgis-${{ env.RELEASE_DATE }}
           name: flatpak-qgis-${{ env.RELEASE_DATE }}
           body: https://qgis.org/resources/installation-guide/#flatpak
-          files: /var/lib/flatpak/app/org.qgis.qgis/**/*
+          files: flatpak-qgis.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
