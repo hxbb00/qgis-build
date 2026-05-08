@@ -40,7 +40,7 @@ jobs:
           zip -r -y QGIS-AppDir-${{ env.RELEASE_DATE }}.zip org.qgis.qgis.AppDir
 
       - name: Create Release
-        uses: softprops/action-gh-release@1v2
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: flatpak-qgis-appdir-${{ env.RELEASE_DATE }}
           name: flatpak-qgis-appdir-${{ env.RELEASE_DATE }}
