@@ -19,7 +19,7 @@
           - name: install flatpak QGIS
             run: |
               echo "install QGIS:"
-              flatpak install flathub app/org.qgis.qgis/x86_64/lts
+              flatpak install -y flathub app/org.qgis.qgis/x86_64/lts
               flatpak info org.qgis.qgis
               flatpak info org.qgis.qgis --show-runtime
               ll /var/lib/flatpak/app/org.qgis.qgis/
