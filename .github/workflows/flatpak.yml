@@ -10,45 +10,43 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - name: Install dependencies
+      - name: Install flatpak & zip
         run: |
           sudo apt update
-          sudo apt install -y flatpak zip git python3-pip
-          # 安装 flatpak2appdir
-          pip3 install flatpak2appdir
-          flatpak2appdir --version
-
-      - name: Add flathub remote
-        run: |
+          sudo apt install -y flatpak zip git
           sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
-      - name: Install QGIS flatpak
+      - name: Install QGIS Flatpak
         run: |
           sudo flatpak install -y flathub app/org.qgis.qgis/x86_64/stable
-          sudo flatpak list | grep qgis
 
-      - name: Export to AppDir with flatpak2appdir
+      - name: Clone flatpak2appdir & grant execute
         run: |
-          # 导出为标准 AppDir
-          flatpak2appdir org.qgis.qgis --output QGIS.AppDir
-          ls -la QGIS.AppDir/
+          git clone https://github.com/sudo-give-me-coffee/flatpak2appdir.git bin
+          cd bin
+          chmod +x flatpak2appdir strace-file appimagetool
 
-      - name: set release date
+      - name: Export QGIS to AppDir
         run: |
-          echo "RELEASE_DATE=$(date +%Y%m%d-%H%M%S)" >> ${GITHUB_ENV}
+          ./bin/flatpak2appdir org.qgis.qgis
+          ls -la org.qgis.qgis.AppDir/
 
-      - name: Pack AppDir to zip
+      - name: Set release date
         run: |
-          zip -r -y QGIS-AppDir-${{ env.RELEASE_DATE }}.zip QGIS.AppDir
+          echo "RELEASE_DATE=$(date +%Y%m%d-%H%M%S)" >> $GITHUB_ENV
+
+      - name: Pack AppDir
+        run: |
+          zip -r -y QGIS-AppDir-${{ env.RELEASE_DATE }}.zip org.qgis.qgis.AppDir
 
       - name: Create Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@1v2
         with:
           tag_name: flatpak-qgis-appdir-${{ env.RELEASE_DATE }}
           name: flatpak-qgis-appdir-${{ env.RELEASE_DATE }}
           body: |
-            QGIS Flatpak 导出标准 AppDir 离线包
-            https://qgis.org/resources/installation-guide/#flatpak
+            QGIS Flatpak → AppDir 离线包
+            工具：https://github.com/sudo-give-me-coffee/flatpak2appdir
           files: |
             QGIS-AppDir-${{ env.RELEASE_DATE }}.zip
         env:
