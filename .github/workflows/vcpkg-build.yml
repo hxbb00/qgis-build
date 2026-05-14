@@ -56,7 +56,31 @@ jobs:
 
       - name: Build QGIS
         run: |
+          cmake --build ./build-x64-linux
           ls -la ./
           ls -la ./qgis
           ls -la ./build-x64-linux
-          cmake --build ./build-x64-linux
+          ls -la ./build-x64-linux/output
+          ls -la ./build-x64-linux/vcpkg_installed/x64-linux-dynamic-release
+
+      - name: Set release date
+        run: |
+          echo "RELEASE_DATE=$(date +%Y%m%d-%H%M%S)" >> $GITHUB_ENV
+
+      - name: Pack output
+        run: |
+          zip -r -y QGIS-output-${{ env.RELEASE_DATE }}.zip ./build-x64-linux/output
+          zip -r -y QGIS-vcpkg_installed-${{ env.RELEASE_DATE }}.zip ./build-x64-linux/vcpkg_installed/x64-linux-dynamic-release
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: vcpkg-qgis-${{ env.RELEASE_DATE }}
+          name: vcpkg-qgis-${{ env.RELEASE_DATE }}
+          body: |
+            QGIS vcpkg build
+          files: |
+            QGIS-output-${{ env.RELEASE_DATE }}.zip
+            QGIS-vcpkg_installed-${{ env.RELEASE_DATE }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
