@@ -13,7 +13,7 @@ jobs:
       - name: Install deps
         run: |
           sudo apt update
-          sudo apt install -y zip git flex bison build-essential ca-certificates ccache cmake autoconf autoconf-archive automake libtool
+          sudo apt install -y zip git flex bison build-essential ca-certificates ccache cmake ninja-build gcc g++ autoconf autoconf-archive automake libtool
 
       - name: 🐩 Install CMake and Ninja
         uses: lukka/get-cmake@7bfc9baacbbdcb5e37957ad05c3546b3e222be3c # latest
@@ -37,6 +37,8 @@ jobs:
           path: qgis
 
       - name: Configure QGIS
+        env:
+          X_VCPKG_ASSET_SOURCES: x-azurl,https://assetcache.open-vcpkg.org/assetcache,,read
         run: |
           echo "VCPKG_ROOT: ${VCPKG_ROOT}"
           cmake -S ./qgis \
@@ -52,7 +54,11 @@ jobs:
             -DWITH_PROJ_DATA=ON \
             -DENABLE_TESTS=OFF \
             -DVCPKG_TARGET_TRIPLET=x64-linux-dynamic-release \
-            -DVCPKG_HOST_TRIPLET=x64-linux-dynamic-release
+            -DVCPKG_HOST_TRIPLET=x64-linux-dynamic-release \
+            -DVCPKG_INSTALL_OPTIONS="--only-binarycaching" \
+            -D "NUGET_USERNAME=${GITHUB_ACTOR}" \
+            -D NUGET_SOURCE="https://nuget.pkg.github.com/qgis/index.json" \
+            -D NUGET_TOKEN=${{ secrets.GITHUB_TOKEN }} || true
 
       - name: Build QGIS
         run: |
