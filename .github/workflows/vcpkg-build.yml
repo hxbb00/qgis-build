@@ -13,14 +13,7 @@ jobs:
       - name: Install deps
         run: |
           sudo apt update
-          sudo apt install -y zip git flex bison build-essential ca-certificates ccache cmake ninja-build gcc g++ autoconf autoconf-archive automake libtool
-
-      - name: 🐩 Install CMake and Ninja
-        uses: lukka/get-cmake@7bfc9baacbbdcb5e37957ad05c3546b3e222be3c # latest
-        with:
-          # Pin to specific version to avoid rebuilding too often
-          # Also helps to avoid spurious build failures like https://github.com/qgis/QGIS/pull/47098
-          cmakeVersion: 3.30.4
+          sudo apt install -y zip git flex bison build-essential ca-certificates ccache cmake pkg-config ninja-build gcc g++ autoconf autoconf-archive automake libtool
 
       - name: Install VCPKG_ROOT
         run: |
@@ -29,6 +22,7 @@ jobs:
           . /tmp/vcpkg-init.sh
           echo "VCPKG_ROOT=$VCPKG_ROOT" >> $GITHUB_ENV
           echo "$VCPKG_ROOT" >> $GITHUB_PATH
+          $VCPKG_ROOT/vcpkg update
 
       - name: clone QGIS repo
         uses: actions/checkout@v6
@@ -54,11 +48,7 @@ jobs:
             -DWITH_PROJ_DATA=ON \
             -DENABLE_TESTS=OFF \
             -DVCPKG_TARGET_TRIPLET=x64-linux-dynamic-release \
-            -DVCPKG_HOST_TRIPLET=x64-linux-dynamic-release \
-            -DVCPKG_INSTALL_OPTIONS="--only-binarycaching" \
-            -D "NUGET_USERNAME=${GITHUB_ACTOR}" \
-            -D NUGET_SOURCE="https://nuget.pkg.github.com/qgis/index.json" \
-            -D NUGET_TOKEN=${{ secrets.GITHUB_TOKEN }} || true
+            -DVCPKG_HOST_TRIPLET=x64-linux-dynamic-release
 
       - name: Build QGIS
         run: |
