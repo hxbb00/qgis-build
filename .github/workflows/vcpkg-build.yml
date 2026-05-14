@@ -1,0 +1,45 @@
+name: Build QGIS By Vcpkg
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install deps
+        run: |
+          sudo apt update
+          sudo apt install -y zip git flex bison build-essential ca-certificates ccache cmake 
+
+      - name: Install QGIS Flatpak
+        run: |
+          export VCPKG_ROOT=$HOME/.vcpkg
+          wget https://aka.ms/vcpkg-init.sh -O /tmp/vcpkg-init.sh
+          . /tmp/vcpkg-init.sh
+          echo "VCPKG_ROOT=$VCPKG_ROOT" >> $GITHUB_ENV
+          echo "$VCPKG_ROOT" >> $GITHUB_PATH
+
+      - name: clone QGIS repo
+        run: |
+          git clone git@github.com:qgis/QGIS.git
+
+      - name: Configure QGIS
+        run: |
+          cmake -S . \
+            -B ./build-x64-linux \
+            -GNinja \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DWITH_VCPKG=ON \
+            -DWITH_BINDINGS=ON \
+            -DVCPKG_TARGET_TRIPLET=x64-linux-dynamic-release \
+            -DVCPKG_HOST_TRIPLET=x64-linux-dynamic-release
+
+      - name: Build QGIS
+        run: |
+          ls -la ./
+          ls -la ./build-x64-linux
+          cmake --build ./build-x64-linux
